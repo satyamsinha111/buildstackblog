@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: 253 252 250;
+    --canvas-subtle: 247 246 243;
+    --canvas-inset: 241 240 236;
+    --line: 232 230 224;
+    --line-strong: 218 215 207;
+    --fg: 17 17 19;
+    --fg-muted: 88 88 96;
+    --fg-subtle: 130 130 140;
+    --fg-inverted: 253 252 250;
+
+    --grid-color: 0 0 0;
+    --grid-opacity: 0.025;
+  }
+
+  .dark {
+    --canvas: 12 12 15;
+    --canvas-subtle: 18 18 22;
+    --canvas-inset: 24 24 29;
+    --line: 38 38 44;
+    --line-strong: 56 56 64;
+    --fg: 245 245 247;
+    --fg-muted: 156 160 170;
+    --fg-subtle: 117 119 128;
+    --fg-inverted: 12 12 15;
+
+    --grid-color: 255 255 255;
+    --grid-opacity: 0.04;
+
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-canvas text-fg font-sans;
+    font-feature-settings: "cv11", "ss01", "ss03";
+    font-synthesis: none;
+  }
+
+  ::selection {
+    background-color: rgb(var(--fg));
+    color: rgb(var(--fg-inverted));
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-fg;
+    letter-spacing: -0.015em;
+  }
+
+  /* Refined focus ring */
+  :focus-visible {
+    outline: 2px solid rgb(var(--fg));
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Smoother scrollbar in dark mode */
+  .dark ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background: rgb(var(--canvas));
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line-strong));
+    border: 3px solid rgb(var(--canvas));
+    border-radius: 9999px;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-fg px-5 py-2.5 text-sm font-medium text-fg-inverted shadow-soft transition hover:opacity-90 active:scale-[0.99];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line bg-canvas px-5 py-2.5 text-sm font-medium text-fg transition hover:border-line-strong hover:bg-canvas-subtle;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition hover:bg-canvas-subtle hover:text-fg;
+  }
+
+  /* Chips and tags */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-canvas-subtle px-3 py-1 text-xs font-medium text-fg-muted ring-1 ring-line;
+  }
+
+  .chip-accent {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-700 ring-1 ring-accent-100 dark:bg-accent-950/50 dark:text-accent-300 dark:ring-accent-900/40;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-fg-muted;
+  }
+
+  /* Editorial card */
+  .card {
+    @apply rounded-2xl border border-line bg-canvas-subtle/40 p-6 transition;
+  }
+
+  .card-hover {
+    @apply hover:border-line-strong hover:bg-canvas-subtle;
+  }
+
+  .link-underline {
+    @apply text-fg underline-offset-4 hover:underline;
+  }
+
+  /* Drop cap on first paragraph of a long-form article */
+  .article-body > p:first-of-type::first-letter {
+    @apply font-display font-medium text-fg;
+    float: left;
+    font-size: 4.5rem;
+    line-height: 0.92;
+    margin-right: 0.65rem;
+    margin-top: 0.45rem;
+    margin-bottom: -0.1rem;
+  }
+
+  /* Heading anchors that appear on hover */
+  .prose :is(h2, h3) {
+    scroll-margin-top: 6rem;
+    position: relative;
+  }
+  .prose :is(h2, h3) > a.heading-anchor {
+    color: inherit;
+    background-image: none !important;
+    text-decoration: none;
+  }
+  .prose :is(h2, h3) > a.heading-anchor::after {
+    content: "#";
+    position: absolute;
+    left: -1.5rem;
+    color: rgb(var(--fg-subtle));
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .prose :is(h2, h3):hover > a.heading-anchor::after {
+    opacity: 0.5;
+  }
+
+  /* Refined code blocks */
+  .prose pre {
+    @apply !bg-ink-950 !text-ink-50;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+  }
+
+  /* Subtle background grid for hero sections */
+  .bg-grid {
+    background-image:
+      linear-gradient(
+        to right,
+        rgb(var(--grid-color) / var(--grid-opacity)) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgb(var(--grid-color) / var(--grid-opacity)) 1px,
+        transparent 1px
+      );
+    background-size: 56px 56px;
+  }
+
+  /* Subtle dotted grid */
+  .bg-dots {
+    background-image: radial-gradient(
+      rgb(var(--grid-color) / var(--grid-opacity)) 1px,
+      transparent 1px
+    );
+    background-size: 18px 18px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .mask-fade-bottom {
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  .scroll-shadow {
+    background:
+      linear-gradient(rgb(var(--canvas)), rgb(var(--canvas))) 0 0,
+      linear-gradient(rgb(var(--canvas)), rgb(var(--canvas))) 100% 0,
+      radial-gradient(
+          farthest-side at 0 50%,
+          rgb(0 0 0 / 0.08),
+          transparent
+        )
+        0 0,
+      radial-gradient(
+          farthest-side at 100% 50%,
+          rgb(0 0 0 / 0.08),
+          transparent
+        )
+        100% 0;
+    background-repeat: no-repeat;
+    background-size: 24px 100%, 24px 100%, 8px 100%, 8px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+}
