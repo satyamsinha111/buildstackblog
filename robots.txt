@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /404.html
+Disallow: /*?*
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.svg$
 
 Sitemap: https://buildstack.dev/sitemap.xml
-Host: buildstack.dev

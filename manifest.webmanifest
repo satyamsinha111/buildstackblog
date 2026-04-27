@@ -1,0 +1,17 @@
+{
+  "name": "BuildStack",
+  "short_name": "BuildStack",
+  "description": "Practical guides for modern web developers, AI tools, and engineering best practices.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "minimal-ui",
+  "orientation": "portrait",
+  "background_color": "#fdfcfa",
+  "theme_color": "#0c0c0f",
+  "lang": "en-US",
+  "categories": ["education", "productivity", "developer"],
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

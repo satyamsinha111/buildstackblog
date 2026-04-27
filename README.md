@@ -22,9 +22,11 @@ A static, SEO-friendly editorial blog written in **plain HTML, CSS, and JavaScri
 ├── category/<slug>/index.html         One per category (×5)
 ├── tag/<slug>/index.html              One per tag
 ├── assets/
-│   ├── styles.css                     ~40 KB hand-written CSS, light + dark themes
+│   ├── styles.css                     ~41 KB hand-written CSS, light + dark themes
 │   └── main.js                        ~6 KB vanilla JS (theme, nav, search, progress bar)
-├── favicon.svg
+├── favicon.svg                        Brand mark (used in browser tab + manifest)
+├── og-default.svg                     1200×630 social preview image
+├── manifest.webmanifest                PWA manifest
 ├── sitemap.xml
 ├── robots.txt
 └── rss.xml
@@ -80,6 +82,18 @@ Edit the corresponding `index.html`. They share the same shell as every other pa
 
 The header and footer are duplicated into every HTML file (this is the cost of "no build step"). Use a project-wide find/replace in your editor when the brand, nav links, or footer changes.
 
+### Updating SEO blocks across pages
+
+Each HTML file has an SEO enhancement block fenced by HTML comments:
+
+```html
+<!-- seo:start -->
+... auto-generated meta tags + JSON-LD ...
+<!-- seo:end -->
+```
+
+When you add or change a post, update the existing JSON-LD blocks (Article schema near the top of the article page, BreadcrumbList inside the seo block) and add a new `<url>` entry to `sitemap.xml`. The `<!-- seo:start -->` / `<!-- seo:end -->` markers exist so a future maintainer (or a one-shot script) can regenerate just that section without disturbing the hand-edited body.
+
 ### Styling
 
 Edit `assets/styles.css`. CSS custom properties at the top of the file define the design tokens (colors for both themes, font stacks, spacing, radii). The light theme is the default and the dark theme uses `[data-theme="dark"]` and `prefers-color-scheme: dark`.
@@ -99,15 +113,66 @@ Edit `assets/main.js`. It handles:
 
 ## SEO features (already wired up)
 
-- Per-page `<title>`, `<meta name="description">`, `<link rel="canonical">`
-- Open Graph (`og:type`, `og:title`, `og:description`, `og:image`, `og:url`) and Twitter Card meta on every page
-- JSON-LD structured data: `WebSite` schema on the home page, `Article` schema on every post (with author, dates, publisher, keywords)
-- Pre-rendered HTML — content is fully visible to crawlers without executing JavaScript
-- `sitemap.xml` with `lastmod`, `changefreq`, `priority`
-- `robots.txt` referencing the sitemap
+**Per-page meta**
+
+- `<title>`, `<meta name="description">`, `<link rel="canonical">`
+- `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">`
+- `<meta name="referrer" content="strict-origin-when-cross-origin">`
+- `<meta name="color-scheme" content="light dark">`
+- Theme color (light + dark variants), viewport, charset
+
+**Open Graph (Facebook, LinkedIn, Slack, Discord, Telegram, etc.)**
+
+- `og:type`, `og:locale`, `og:site_name`, `og:url`, `og:title`, `og:description`
+- `og:image` (1200×630 SVG at `/og-default.svg`), with `og:image:type`, `og:image:width`, `og:image:height`, `og:image:alt`
+- On article pages: `article:published_time`, `article:modified_time`, `article:author`, `article:section`, `article:tag` (one per tag), `og:updated_time`
+
+**Twitter Cards**
+
+- `twitter:card=summary_large_image`, `twitter:site`, `twitter:creator`
+- `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
+
+**Structured data (JSON-LD)** — every block validates as JSON; designed as a connected graph
+
+- Home: `WebSite` (`@id=#website`, with `SearchAction`) + `Organization` (`@id=#organization`)
+- Articles: `Article` (with `@id`, `image`, `mainEntityOfPage`, `publisher` linked by `@id` to the `Organization`, `isPartOf` Blog, `articleSection`, `keywords`) + `BreadcrumbList`
+- Blog index: `CollectionPage` (with `ItemList` of all posts) + `BreadcrumbList`
+- Category pages: `CollectionPage` (with `ItemList` of posts in that category) + `BreadcrumbList`
+- Tag pages: `CollectionPage` (with `ItemList` of posts with that tag) + `BreadcrumbList`
+- About: `AboutPage` + `BreadcrumbList`
+- Contact: `ContactPage` + `BreadcrumbList`
+- Privacy / Terms: `WebPage` + `BreadcrumbList`
+- 404: `WebPage` (with `noindex` robots tag)
+
+**Crawlability & discovery**
+
+- Pre-rendered HTML — every word is visible to crawlers without executing JavaScript
+- `sitemap.xml` with `lastmod`, `changefreq`, `priority` for every URL
+- `robots.txt` referencing the sitemap, blocking query-string variants and the 404 page
 - `rss.xml` with the 30 most recent posts
-- Semantic HTML: `<article>`, `<header>`, `<main>`, `<nav>`, `<time datetime="...">`, breadcrumbs with proper `aria-label`
+- `<link rel="alternate" type="application/rss+xml">` and `<link rel="sitemap">` in every page head
+
+**Performance & PWA hints (good for Core Web Vitals)**
+
+- `<link rel="dns-prefetch">` and `<link rel="preconnect">` to Google Fonts and Google AdSense origins
+- `<link rel="preload" as="style">` for the main stylesheet (faster first paint)
+- Google Fonts loaded with `&display=swap` (no invisible-text flash)
+- `manifest.webmanifest` (installable as a PWA)
+- `<link rel="apple-touch-icon">`, `<link rel="mask-icon">`, `<meta name="apple-mobile-web-app-*">`
+- `<meta name="format-detection" content="telephone=no">`
+
+**Accessibility (also helps SEO)**
+
+- Semantic HTML: `<article>`, `<header>`, `<main>`, `<nav>`, `<time datetime="...">`, breadcrumbs with `aria-label`
 - Skip-to-content link, focus-visible outlines, `aria-expanded` on the mobile menu, `aria-hidden` on decorative SVGs
+- `lang="en"` on `<html>`, `inLanguage:"en-US"` in JSON-LD
+- High-contrast text in both themes
+
+**Validation**
+
+- Test JSON-LD: <https://search.google.com/test/rich-results>
+- Test Open Graph: <https://www.opengraph.xyz/> or <https://www.linkedin.com/post-inspector/>
+- Test mobile-friendliness: <https://pagespeed.web.dev/>
 
 ---
 
