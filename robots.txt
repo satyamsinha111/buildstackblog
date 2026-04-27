@@ -6,4 +6,4 @@ Allow: /*.css$
 Allow: /*.js$
 Allow: /*.svg$
 
-Sitemap: https://buildstack.dev/sitemap.xml
+Sitemap: https://buildstack.digital/sitemap.xml
