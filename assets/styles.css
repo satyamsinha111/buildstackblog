@@ -548,21 +548,42 @@ a:hover .title-underline { color: rgb(var(--fg-muted)); }
 /* ---------------------------------------------------------------------------
    Cover art (thumbnail)
    Medium layout: small square-ish thumbnail to the right of the text.
+   Gradients in source SVGs are toned down via filter to feel editorial.
 --------------------------------------------------------------------------- */
 .cover {
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 2px;
   outline: 0;
+  background: rgb(var(--canvas-inset));
 }
 .cover svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.cover-card { aspect-ratio: 1 / 1; }
-.cover-feature { aspect-ratio: 1 / 1; }
-.cover-lead { aspect-ratio: 1 / 1; }
+.cover-card,
+.cover-feature,
+.cover-lead {
+  aspect-ratio: 1 / 1;
+  filter: saturate(0.55) contrast(0.95);
+}
+:root.dark .cover-card,
+:root.dark .cover-feature,
+:root.dark .cover-lead {
+  filter: saturate(0.5) contrast(0.85) brightness(0.85);
+}
+.cover-card::after,
+.cover-feature::after,
+.cover-lead::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(0 0 0 / 0.06));
+  pointer-events: none;
+}
 .cover-post {
   aspect-ratio: 16 / 9;
   border-radius: 4px;
+  filter: saturate(0.7);
 }
+:root.dark .cover-post { filter: saturate(0.6) brightness(0.85); }
 
 /* ---------------------------------------------------------------------------
    List-style cards (Medium feel)
@@ -752,11 +773,11 @@ a:hover .title-underline { color: rgb(var(--fg-muted)); }
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgb(var(--fg-subtle));
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgb(var(--fg-muted));
 }
 .meta .mono { text-transform: none; letter-spacing: normal; }
 
@@ -765,66 +786,72 @@ a:hover .title-underline { color: rgb(var(--fg-muted)); }
 --------------------------------------------------------------------------- */
 .home-latest {
   display: grid;
-  gap: 3rem;
+  gap: 2.5rem;
   grid-template-columns: 1fr;
 }
 @media (min-width: 1024px) {
-  .home-latest { grid-template-columns: 8fr 4fr; }
+  .home-latest { grid-template-columns: minmax(0, 1fr) 320px; gap: 4rem; }
 }
-.home-latest-aside {
-  border-left: 0;
-  padding-left: 0;
-}
+.home-latest-main { min-width: 0; }
+.home-latest-main .grid-2,
+.home-latest-main .grid-3 { max-width: none; margin: 0; }
+.home-latest-aside { border-left: 0; padding-left: 0; }
 @media (min-width: 1024px) {
   .home-latest-aside {
     border-left: 1px solid rgb(var(--line));
-    padding-left: 1.5rem;
+    padding-left: 2rem;
   }
 }
-.sticky-aside { position: sticky; top: 6rem; }
+.sticky-aside { position: sticky; top: 5rem; }
 .aside-title {
-  margin-top: 0.75rem;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.012em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(var(--fg));
 }
 .aside-desc {
   margin-top: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.65;
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  line-height: 1.5;
   color: rgb(var(--fg-muted));
 }
 .picks-list {
   list-style: none;
-  margin: 1.5rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
 }
 .picks-list li {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 0.75rem;
   padding: 1rem 0;
-  border-top: 1px solid rgb(var(--line));
+  border-top: 0;
 }
-.picks-list li:first-child { border-top: 0; padding-top: 0; }
+.picks-list li:first-child { padding-top: 0.5rem; }
 .picks-num {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 500;
   color: rgb(var(--fg-subtle));
   font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  opacity: 0.4;
 }
 .picks-link { flex: 1; min-width: 0; }
 .picks-title {
-  margin-top: 0.25rem;
+  margin-top: 0;
   font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 1.35;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.014em;
   color: rgb(var(--fg));
 }
-.picks-link:hover .picks-title { text-decoration: underline; text-underline-offset: 4px; }
+.picks-link:hover .picks-title { color: rgb(var(--fg-muted)); text-decoration: none; }
 .mobile-only-cta {
   margin-top: 2.5rem;
   width: 100%;
