@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Understanding JavaScript Promises and Async/Await — BuildStack</title>
+<meta name="description" content="A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/javascript-async-await-promises/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/javascript-async-await-promises/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="Understanding JavaScript Promises and Async/Await — BuildStack" />
+<meta property="og:description" content="A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Understanding JavaScript Promises and Async/Await — BuildStack" />
+<meta name="twitter:description" content="A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Understanding JavaScript Promises and Async/Await","description":"A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance.","datePublished":"2026-02-25","dateModified":"2026-02-25","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/javascript-async-await-promises/"},"keywords":"JavaScript, Async, Promises","articleSection":"Developer Guides","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/developer-guides/">Developer Guides</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #10b981, #14b8a6, #0891b2);"></span>Developer Guides</p>
+          <h1 class="post-title">Understanding JavaScript Promises and Async/Await</h1>
+          <p class="post-lede">A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-02-25">February 25, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">6 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,279 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-javascript-async-await-promises-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-javascript-async-await-promises-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-javascript-async-await-promises-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-javascript-async-await-promises-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-javascript-async-await-promises-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-bg)" />
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-glow)" />
+      <g transform="translate(317 200) rotate(300)">
+      <circle cx="0" cy="0" r="220" fill="#064e3b" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>JavaScript&#39;s async story has gotten a lot better over the years, but the failure modes are still subtle. This guide builds a working mental model of Promises and async/await — enough to write the right code on the first try and recognize the wrong code in code review.</p>
+<p>We&#39;ll start with the model and work outward to the patterns.</p>
+<h2 id="what-a-promise-actually-is"><a class="heading-anchor" href="#what-a-promise-actually-is" aria-hidden="true" tabindex="-1"></a>What a Promise actually is</h2>
+<p>A Promise is an object that represents the future result of an operation. At any moment, it&#39;s in one of three states:</p>
+<ul>
+<li><strong>Pending</strong> — work is in progress.</li>
+<li><strong>Fulfilled</strong> — the work succeeded, with a value.</li>
+<li><strong>Rejected</strong> — the work failed, with a reason.</li>
+</ul>
+<p>Once a Promise leaves &quot;pending,&quot; it&#39;s settled forever. It cannot become pending again, and it cannot change from fulfilled to rejected.</p>
+<p>Two important consequences:</p>
+<ul>
+<li>A Promise represents a <em>single</em> future value. If you want a stream of values, you want an <code>AsyncIterable</code> or a library like RxJS.</li>
+<li>A Promise starts running the moment it&#39;s created. There&#39;s no &quot;lazy&quot; Promise unless you build one yourself.</li>
+</ul>
+<p>That second point is the source of more bugs than any other Promise behavior. We&#39;ll come back to it.</p>
+<h2 id="the-classic-promise-api"><a class="heading-anchor" href="#the-classic-promise-api" aria-hidden="true" tabindex="-1"></a>The classic Promise API</h2>
+<p>You can consume a Promise with <code>.then()</code> and <code>.catch()</code>:</p>
+<pre><code class="language-js">fetch(&quot;/api/posts&quot;)
+  .then((res) =&gt; res.json())
+  .then((posts) =&gt; render(posts))
+  .catch((err) =&gt; showError(err));
+</code></pre>
+<p>This works, but it doesn&#39;t compose well past two or three steps. That&#39;s what async/await fixes.</p>
+<h2 id="asyncawait-is-just-sugar-mostly"><a class="heading-anchor" href="#asyncawait-is-just-sugar-mostly" aria-hidden="true" tabindex="-1"></a>async/await is just sugar (mostly)</h2>
+<p><code>async</code> and <code>await</code> are syntactic sugar for the Promise API. The two pieces of sugar are:</p>
+<ul>
+<li>An <code>async</code> function always returns a Promise.</li>
+<li><code>await</code> pauses execution inside an async function until a Promise settles, then unwraps it.</li>
+</ul>
+<p>Rewriting the example above:</p>
+<pre><code class="language-js">async function loadPosts() {
+  try {
+    const res = await fetch(&quot;/api/posts&quot;);
+    const posts = await res.json();
+    render(posts);
+  } catch (err) {
+    showError(err);
+  }
+}
+</code></pre>
+<p>It reads top-to-bottom like synchronous code. That&#39;s the whole point.</p>
+<p>A few things people get wrong:</p>
+<ul>
+<li>Forgetting that <code>async</code> functions still return Promises. <code>let posts = loadPosts()</code> gives you a Promise, not posts.</li>
+<li>Forgetting <code>await</code>. <code>const data = fetch(url).json()</code> doesn&#39;t work and the bug is silent until something downstream breaks.</li>
+<li>Treating <code>try/catch</code> around <code>await</code> as optional. It&#39;s the <em>only</em> way to handle rejections in async functions.</li>
+</ul>
+<h2 id="run-things-in-parallel-when-you-can"><a class="heading-anchor" href="#run-things-in-parallel-when-you-can" aria-hidden="true" tabindex="-1"></a>Run things in parallel when you can</h2>
+<p>The most common performance mistake we see is unnecessary serialization:</p>
+<pre><code class="language-js">const user = await fetchUser(id);
+const posts = await fetchPosts(id);
+const friends = await fetchFriends(id);
+</code></pre>
+<p>If those three calls don&#39;t depend on each other, this code is three times slower than it needs to be. Use <code>Promise.all</code>:</p>
+<pre><code class="language-js">const [user, posts, friends] = await Promise.all([
+  fetchUser(id),
+  fetchPosts(id),
+  fetchFriends(id),
+]);
+</code></pre>
+<p>Now they run concurrently. The total time is the slowest of the three, not the sum.</p>
+<p>A subtle gotcha: <code>Promise.all</code> rejects as soon as <em>any</em> promise rejects, but the others keep running. If you need all results regardless of failure, use <code>Promise.allSettled</code>:</p>
+<pre><code class="language-js">const results = await Promise.allSettled([
+  fetchUser(id),
+  fetchPosts(id),
+  fetchFriends(id),
+]);
+</code></pre>
+<p>Each result is <code>{ status: &quot;fulfilled&quot;, value }</code> or <code>{ status: &quot;rejected&quot;, reason }</code>. You decide how to handle each one.</p>
+<h2 id="the-promises-start-immediately-trap"><a class="heading-anchor" href="#the-promises-start-immediately-trap" aria-hidden="true" tabindex="-1"></a>The Promises-start-immediately trap</h2>
+<pre><code class="language-js">async function loadEverything() {
+  const usersPromise = fetchUsers();
+  const postsPromise = fetchPosts();
+  // ... maybe some other work
+  const users = await usersPromise;
+  const posts = await postsPromise;
+  return { users, posts };
+}
+</code></pre>
+<p>This is great. Both fetches start immediately. By the time we await, they&#39;re already in flight.</p>
+<p>Compare to:</p>
+<pre><code class="language-js">async function loadEverything() {
+  const users = await fetchUsers();
+  const posts = await fetchPosts(); // doesn&#39;t start until users finishes
+  return { users, posts };
+}
+</code></pre>
+<p>This is sequential. The second pattern shows up everywhere because async/await makes serialization look natural. Look for it in code review.</p>
+<h2 id="sequential-when-you-have-to-be"><a class="heading-anchor" href="#sequential-when-you-have-to-be" aria-hidden="true" tabindex="-1"></a>Sequential when you have to be</h2>
+<p>Sometimes you genuinely need a loop of awaits — when each iteration depends on the previous one, or when you want to throttle an external API:</p>
+<pre><code class="language-js">for (const id of ids) {
+  await processOne(id);
+}
+</code></pre>
+<p>This runs one at a time. That&#39;s fine when needed.</p>
+<p>What&#39;s <em>not</em> fine:</p>
+<pre><code class="language-js">ids.forEach(async (id) =&gt; {
+  await processOne(id);
+});
+</code></pre>
+<p><code>forEach</code> doesn&#39;t await its callback. This kicks off all the calls at once, ignores their results, and finishes immediately. If you wanted parallelism, use <code>Promise.all(ids.map(processOne))</code>. If you wanted serial, use a for-of loop.</p>
+<p>This bug is in production code more often than people admit.</p>
+<h2 id="concurrency-limits-with-promiseall-are-unsafe"><a class="heading-anchor" href="#concurrency-limits-with-promiseall-are-unsafe" aria-hidden="true" tabindex="-1"></a>Concurrency limits with <code>Promise.all</code> are unsafe</h2>
+<p><code>Promise.all([...].map(...))</code> runs <em>everything</em> at once. For 10 items, fine. For 10,000, you&#39;ll hit rate limits, exhaust connections, and possibly DoS your own database.</p>
+<p>A small pattern for bounded concurrency:</p>
+<pre><code class="language-js">async function pool(items, limit, fn) {
+  const results = [];
+  let i = 0;
+  const workers = Array.from({ length: limit }, async () =&gt; {
+    while (i &lt; items.length) {
+      const idx = i++;
+      results[idx] = await fn(items[idx]);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
+const out = await pool(largeArray, 8, processOne);
+</code></pre>
+<p>Or use a library (<code>p-limit</code> is a good one). The point is to be deliberate about how many things are in flight at once.</p>
+<h2 id="cancelling-work-with-abortcontroller"><a class="heading-anchor" href="#cancelling-work-with-abortcontroller" aria-hidden="true" tabindex="-1"></a>Cancelling work with AbortController</h2>
+<p>In 2026, almost every async API in the browser and Node.js accepts an <code>AbortSignal</code>. You should pass one through your stack:</p>
+<pre><code class="language-js">const controller = new AbortController();
+
+const data = await fetch(&quot;/api/slow&quot;, { signal: controller.signal });
+
+// somewhere else, when the user navigates away:
+controller.abort();
+</code></pre>
+<p>Reasons to bother:</p>
+<ul>
+<li>Cancelling stale data fetches when a user types in a search box.</li>
+<li>Stopping background work when the user leaves a page.</li>
+<li>Bounding total time on a request that might hang.</li>
+</ul>
+<p>It&#39;s a small habit that makes apps feel dramatically more responsive.</p>
+<h2 id="error-handling-patterns"><a class="heading-anchor" href="#error-handling-patterns" aria-hidden="true" tabindex="-1"></a>Error handling patterns</h2>
+<p>Two patterns cover most async error handling:</p>
+<h3 id="wrap-at-the-boundary"><a class="heading-anchor" href="#wrap-at-the-boundary" aria-hidden="true" tabindex="-1"></a>Wrap at the boundary</h3>
+<pre><code class="language-js">export async function safeApi(path) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) return { error: `HTTP ${res.status}` };
+    return { data: await res.json() };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+</code></pre>
+<p>A function that never throws, returns a tagged result. The rest of the code can pattern-match on it.</p>
+<h3 id="throw-but-high-up"><a class="heading-anchor" href="#throw-but-high-up" aria-hidden="true" tabindex="-1"></a>Throw, but high up</h3>
+<p>For internal code, throw freely and catch at the request handler. Don&#39;t wrap every function in try/catch — that&#39;s the JavaScript equivalent of swallowing exceptions.</p>
+<h2 id="things-to-avoid"><a class="heading-anchor" href="#things-to-avoid" aria-hidden="true" tabindex="-1"></a>Things to avoid</h2>
+<p>A short list of patterns we keep seeing in code review:</p>
+<ul>
+<li><strong>Using <code>.then()</code> inside <code>async</code></strong> functions. Pick one style. Mixing makes errors easier to drop on the floor.</li>
+<li><strong>Awaiting in a <code>Promise.all</code> callback</strong> instead of mapping. <code>await Promise.all(items.map(async (i) =&gt; await fetchOne(i)))</code> does what you mean, but is often easier to write as <code>await Promise.all(items.map(fetchOne))</code>.</li>
+<li><strong>Catching everything to log it and rethrow nothing.</strong> Now you have unhandled rejections that log twice and break tests.</li>
+<li><strong>Forgetting that React event handlers and lifecycle effects can call async functions but don&#39;t await them.</strong> Errors thrown inside become unhandled.</li>
+</ul>
+<h2 id="a-clean-mental-model"><a class="heading-anchor" href="#a-clean-mental-model" aria-hidden="true" tabindex="-1"></a>A clean mental model</h2>
+<p>Most async bugs come from one of three confusions:</p>
+<ol>
+<li>&quot;I forgot to <code>await</code> and the code ran out of order.&quot;</li>
+<li>&quot;I serialized work that could have been parallel.&quot;</li>
+<li>&quot;I started 10,000 things at once when I only meant to start 8.&quot;</li>
+</ol>
+<p>Knowing those three, plus the basic syntax, is enough to write correct async JavaScript 95% of the time. The other 5% is interesting, edge-case territory — but you&#39;ll know you&#39;re there because the patterns above won&#39;t quite fit.</p>
+<p>Async code isn&#39;t fundamentally hard. It just rewards a clear model and a little discipline. With those, modern JavaScript handles concurrency more cleanly than most languages a decade ago could.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/javascript/">JavaScript</a><a class="chip" href="/tag/async/">Async</a><a class="chip" href="/tag/promises/">Promises</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published February 25, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=Understanding%20JavaScript%20Promises%20and%20Async%2FAwait%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fjavascript-async-await-promises%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fjavascript-async-await-promises%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fjavascript-async-await-promises%2F&amp;t=Understanding%20JavaScript%20Promises%20and%20Async%2FAwait" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#what-a-promise-actually-is">What a Promise actually is</a></li><li class="toc-l2"><a href="#the-classic-promise-api">The classic Promise API</a></li><li class="toc-l2"><a href="#asyncawait-is-just-sugar-mostly">async/await is just sugar (mostly)</a></li><li class="toc-l2"><a href="#run-things-in-parallel-when-you-can">Run things in parallel when you can</a></li><li class="toc-l2"><a href="#the-promises-start-immediately-trap">The Promises-start-immediately trap</a></li><li class="toc-l2"><a href="#sequential-when-you-have-to-be">Sequential when you have to be</a></li><li class="toc-l2"><a href="#concurrency-limits-with-promiseall-are-unsafe">Concurrency limits with Promise.all are unsafe</a></li><li class="toc-l2"><a href="#cancelling-work-with-abortcontroller">Cancelling work with AbortController</a></li><li class="toc-l2"><a href="#error-handling-patterns">Error handling patterns</a></li><li class="toc-l3"><a href="#wrap-at-the-boundary">Wrap at the boundary</a></li><li class="toc-l3"><a href="#throw-but-high-up">Throw, but high up</a></li><li class="toc-l2"><a href="#things-to-avoid">Things to avoid</a></li><li class="toc-l2"><a href="#a-clean-mental-model">A clean mental model</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/beginner-guide-to-rest-apis/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-beginner-guide-to-rest-apis-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-beginner-guide-to-rest-apis-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-beginner-guide-to-rest-apis-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-bg)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-glow)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-grid)" />
+    <g transform="translate(303 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(189)" fill="#064e3b" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(219)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">A Practical Beginner&#39;s Guide to REST APIs</span></h3>
+        <p class="card-feature-desc">What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/deploy-fullstack-app-walkthrough/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-deploy-fullstack-app-walkthrough-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-bg)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-glow)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-dots)" />
+    <g transform="translate(285 200) rotate(5)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</span></h3>
+        <p class="card-feature-desc">From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/graphql-vs-rest-comparison/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-graphql-vs-rest-comparison-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-graphql-vs-rest-comparison-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-graphql-vs-rest-comparison-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-graphql-vs-rest-comparison-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-graphql-vs-rest-comparison-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-bg)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-glow)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-grid)" />
+    <g transform="translate(291 200) rotate(189)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">GraphQL vs REST: A Practical Comparison</span></h3>
+        <p class="card-feature-desc">Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

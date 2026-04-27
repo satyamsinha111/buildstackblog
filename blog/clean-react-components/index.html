@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to Write React Components That Don&#39;t Get Refactored Twice — BuildStack</title>
+<meta name="description" content="Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/clean-react-components/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/clean-react-components/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="How to Write React Components That Don&#39;t Get Refactored Twice — BuildStack" />
+<meta property="og:description" content="Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to Write React Components That Don&#39;t Get Refactored Twice — BuildStack" />
+<meta name="twitter:description" content="Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Write React Components That Don't Get Refactored Twice","description":"Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites.","datePublished":"2026-03-13","dateModified":"2026-03-13","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/clean-react-components/"},"keywords":"React, Code Quality, Patterns","articleSection":"Best Practices","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/best-practices/">Best Practices</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #475569, #334155, #0f172a);"></span>Best Practices</p>
+          <h1 class="post-title">How to Write React Components That Don&#39;t Get Refactored Twice</h1>
+          <p class="post-lede">Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-03-13">March 13, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">6 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,220 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-clean-react-components-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-clean-react-components-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-clean-react-components-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-clean-react-components-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-clean-react-components-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-bg)" />
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-glow)" />
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-grid)" />
+    <g transform="translate(280 200) rotate(63)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>A &quot;clean&quot; React component isn&#39;t one that looks pretty in isolation. It&#39;s one that survives six months of feature requests, three new contributors, and a complete redesign without getting completely rewritten. That&#39;s a much higher bar, and it requires habits, not tricks.</p>
+<p>This is a tour of the practices that, in our experience, make the biggest difference between components that age well and ones that get tagged &quot;needs refactor&quot; two sprints in.</p>
+<h2 id="1-make-the-prop-interface-tell-the-truth"><a class="heading-anchor" href="#1-make-the-prop-interface-tell-the-truth" aria-hidden="true" tabindex="-1"></a>1. Make the prop interface tell the truth</h2>
+<p>A component&#39;s props are its API. Treat them like one.</p>
+<p>Here&#39;s a tell-tale sign of a component that hasn&#39;t been thought through:</p>
+<pre><code class="language-tsx">&lt;Card variant=&quot;primary&quot; hideHeader hideFooter dark large compact /&gt;
+</code></pre>
+<p>Six props, three of them booleans, two of them contradictory. Each one was added in a different PR. The component now has 2^6 = 64 possible appearances and tests for none of them.</p>
+<p>The fix is usually to step back and ask: what <em>kinds</em> of cards exist? Often there are three or four real variants, and you can express them as discriminated props:</p>
+<pre><code class="language-tsx">type CardProps =
+  | { kind: &quot;default&quot;; title: string; children: ReactNode }
+  | { kind: &quot;compact&quot;; title: string }
+  | { kind: &quot;feature&quot;; title: string; description: string; cta: ReactNode };
+</code></pre>
+<p>Now the type system enforces correctness, and the component&#39;s complexity matches the actual product.</p>
+<h2 id="2-lift-state-up-only-as-far-as-it-needs-to-go"><a class="heading-anchor" href="#2-lift-state-up-only-as-far-as-it-needs-to-go" aria-hidden="true" tabindex="-1"></a>2. Lift state up only as far as it needs to go</h2>
+<p>A common React pitfall: every piece of state lives in a context or a global store, &quot;just in case.&quot; This makes components easier to &quot;wire up&quot; and dramatically harder to reason about.</p>
+<p>The rule we use:</p>
+<ul>
+<li>State that only one component cares about: <code>useState</code> in that component.</li>
+<li>State two siblings need to share: lift to their common parent.</li>
+<li>State five components scattered across the tree need: a context, but only when you&#39;ve actually needed to.</li>
+<li>State that survives navigation: a server cache or URL parameters, not a global client store.</li>
+</ul>
+<p>Most React performance problems we see are state lifted higher than necessary, causing unrelated components to re-render. Most React readability problems are state lifted lower than necessary, requiring prop-drilling for things that should be local.</p>
+<h2 id="3-composition-beats-configuration"><a class="heading-anchor" href="#3-composition-beats-configuration" aria-hidden="true" tabindex="-1"></a>3. Composition beats configuration</h2>
+<p>When in doubt, give the component slots instead of props.</p>
+<p>Bad:</p>
+<pre><code class="language-tsx">&lt;Modal title=&quot;Confirm&quot; footerText=&quot;Are you sure?&quot; confirmLabel=&quot;Yes&quot; cancelLabel=&quot;No&quot; /&gt;
+</code></pre>
+<p>Good:</p>
+<pre><code class="language-tsx">&lt;Modal&gt;
+  &lt;Modal.Header&gt;Confirm&lt;/Modal.Header&gt;
+  &lt;Modal.Body&gt;Are you sure?&lt;/Modal.Body&gt;
+  &lt;Modal.Footer&gt;
+    &lt;Button kind=&quot;secondary&quot;&gt;No&lt;/Button&gt;
+    &lt;Button kind=&quot;primary&quot;&gt;Yes&lt;/Button&gt;
+  &lt;/Modal.Footer&gt;
+&lt;/Modal&gt;
+</code></pre>
+<p>The configuration version looks shorter. It&#39;s also a trap. The first time you need a custom footer with a checkbox, the API has to grow. The composition version handles every future variation for free.</p>
+<p>The trade-off is that composition has slightly more boilerplate at the call site. That&#39;s almost always the right trade.</p>
+<h2 id="4-dont-useeffect-to-derive-state"><a class="heading-anchor" href="#4-dont-useeffect-to-derive-state" aria-hidden="true" tabindex="-1"></a>4. Don&#39;t <code>useEffect</code> to derive state</h2>
+<p>This is one of the most common bugs in React codebases.</p>
+<pre><code class="language-tsx">function ProductCard({ product }) {
+  const [discounted, setDiscounted] = useState(0);
+
+  useEffect(() =&gt; {
+    setDiscounted(product.price * 0.9);
+  }, [product.price]);
+
+  return &lt;p&gt;{discounted}&lt;/p&gt;;
+}
+</code></pre>
+<p>This renders twice on every prop change and is harder to reason about than the alternative. Just compute it:</p>
+<pre><code class="language-tsx">function ProductCard({ product }) {
+  const discounted = product.price * 0.9;
+  return &lt;p&gt;{discounted}&lt;/p&gt;;
+}
+</code></pre>
+<p>The rule: <strong><code>useEffect</code> is for synchronizing with the outside world</strong> — DOM APIs, timers, network requests. It&#39;s not for derived values. If you find yourself reaching for <code>useEffect</code> to compute something from props or state, you almost always don&#39;t need it.</p>
+<h2 id="5-co-locate-then-extract"><a class="heading-anchor" href="#5-co-locate-then-extract" aria-hidden="true" tabindex="-1"></a>5. Co-locate, then extract</h2>
+<p>Resist the temptation to extract every component into its own file the moment you write it. Inline a small subcomponent at first. Extract when:</p>
+<ul>
+<li>It&#39;s used in more than one place.</li>
+<li>It has its own state or effects worth isolating.</li>
+<li>It&#39;s grown big enough that it dominates the file it lives in.</li>
+</ul>
+<p>Premature extraction creates a maze of one-line files that&#39;s hard to navigate and harder to refactor. Files that are 200–400 lines and contain three related components are usually easier to work with than thirty 30-line files.</p>
+<h2 id="6-name-your-hooks-like-the-data-they-manage"><a class="heading-anchor" href="#6-name-your-hooks-like-the-data-they-manage" aria-hidden="true" tabindex="-1"></a>6. Name your hooks like the data they manage</h2>
+<p>A hook called <code>useData</code> is a bug waiting to happen. A hook called <code>useCurrentUser</code> is a contract.</p>
+<p>Some habits that pay off:</p>
+<ul>
+<li>Name hooks after what they return, not what they do (<code>useCurrentUser</code>, <code>useShoppingCart</code>, not <code>useFetchUser</code>).</li>
+<li>Hooks that fetch should return the same shape as their successful state when possible (<code>{ user, isLoading, error }</code>).</li>
+<li>Resist hooks with a dozen parameters. They&#39;re a sign you&#39;re trying to express a stateful object as a function.</li>
+</ul>
+<p>The best hooks read at the call site like English: &quot;use the current user,&quot; &quot;use the cart,&quot; &quot;use the active modal.&quot;</p>
+<h2 id="7-stop-being-clever-with-usememo-and-usecallback"><a class="heading-anchor" href="#7-stop-being-clever-with-usememo-and-usecallback" aria-hidden="true" tabindex="-1"></a>7. Stop being clever with <code>useMemo</code> and <code>useCallback</code></h2>
+<p><code>useMemo</code> and <code>useCallback</code> are not free. They each have an allocation, a dependency check, and a reference comparison. Sprinkling them everywhere makes code slower <em>and</em> harder to read.</p>
+<p>When to use them:</p>
+<ul>
+<li>The wrapped value is genuinely expensive to compute (parsing a large object, running a sort over thousands of items).</li>
+<li>You&#39;re passing a callback to a memoized child and need referential stability.</li>
+</ul>
+<p>When not to use them:</p>
+<ul>
+<li>&quot;Just in case.&quot; React is fast enough that wrapping every callback in <code>useCallback</code> is a net loss.</li>
+<li>For simple values like <code>count + 1</code>. Stop.</li>
+</ul>
+<p>The rule of thumb: don&#39;t optimize until you&#39;ve measured.</p>
+<h2 id="8-errors-and-loading-states-are-part-of-the-design"><a class="heading-anchor" href="#8-errors-and-loading-states-are-part-of-the-design" aria-hidden="true" tabindex="-1"></a>8. Errors and loading states are part of the design</h2>
+<p>Every component that fetches data has at least three states: loading, error, success. Designing only the success state is the most common cause of UI that looks great in screenshots and feels broken in production.</p>
+<p>A good pattern:</p>
+<pre><code class="language-tsx">function PostList() {
+  const { data, error, isLoading } = usePosts();
+  if (isLoading) return &lt;PostListSkeleton /&gt;;
+  if (error) return &lt;ErrorState onRetry={refetch} /&gt;;
+  if (!data?.length) return &lt;EmptyState /&gt;;
+  return data.map((post) =&gt; &lt;PostCard key={post.id} post={post} /&gt;);
+}
+</code></pre>
+<p>That&#39;s four states explicitly handled in seven lines. Most &quot;weird UI bugs&quot; come from skipping one of them.</p>
+<h2 id="9-test-the-contract-not-the-implementation"><a class="heading-anchor" href="#9-test-the-contract-not-the-implementation" aria-hidden="true" tabindex="-1"></a>9. Test the contract, not the implementation</h2>
+<p>A test that asserts &quot;the component renders a <code>&lt;div&gt;</code> with class <code>wrapper</code>&quot; will break the next time someone changes the markup. A test that asserts &quot;the user can submit the form and see a confirmation&quot; will keep passing through three redesigns.</p>
+<p>React Testing Library is built around this principle: test behavior, not internals. If your test is reaching for component instances or testing exact DOM structure, you&#39;re probably testing the wrong thing.</p>
+<h2 id="10-write-components-like-the-next-person-who-reads-them-is-on-a-deadline"><a class="heading-anchor" href="#10-write-components-like-the-next-person-who-reads-them-is-on-a-deadline" aria-hidden="true" tabindex="-1"></a>10. Write components like the next person who reads them is on a deadline</h2>
+<p>Practical implications:</p>
+<ul>
+<li>Sort imports.</li>
+<li>Pull constants out of render.</li>
+<li>Give long props meaningful names.</li>
+<li>Add a <code>// why this exists</code> comment when something looks weirder than it should.</li>
+<li>Avoid clever one-liners that need a paragraph to explain.</li>
+</ul>
+<p>The goal isn&#39;t beauty. It&#39;s the reader being able to make a small change without having to understand everything.</p>
+<h2 id="a-short-closing-thought"><a class="heading-anchor" href="#a-short-closing-thought" aria-hidden="true" tabindex="-1"></a>A short closing thought</h2>
+<p>React has been around long enough that the patterns are well-understood. Most of the value isn&#39;t in choosing exotic tools — it&#39;s in being consistently boring across a codebase. Boring components compose. Boring components survive refactors. Boring components are the ones that, six months later, you don&#39;t have to rewrite.</p>
+<p>That&#39;s the only metric of clean React code that really matters.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/react/">React</a><a class="chip" href="/tag/code-quality/">Code Quality</a><a class="chip" href="/tag/patterns/">Patterns</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published March 13, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=How%20to%20Write%20React%20Components%20That%20Don&#39;t%20Get%20Refactored%20Twice%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fclean-react-components%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fclean-react-components%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fclean-react-components%2F&amp;t=How%20to%20Write%20React%20Components%20That%20Don&#39;t%20Get%20Refactored%20Twice" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#1-make-the-prop-interface-tell-the-truth">1. Make the prop interface tell the truth</a></li><li class="toc-l2"><a href="#2-lift-state-up-only-as-far-as-it-needs-to-go">2. Lift state up only as far as it needs to go</a></li><li class="toc-l2"><a href="#3-composition-beats-configuration">3. Composition beats configuration</a></li><li class="toc-l2"><a href="#4-dont-useeffect-to-derive-state">4. Don&#39;t useEffect to derive state</a></li><li class="toc-l2"><a href="#5-co-locate-then-extract">5. Co-locate, then extract</a></li><li class="toc-l2"><a href="#6-name-your-hooks-like-the-data-they-manage">6. Name your hooks like the data they manage</a></li><li class="toc-l2"><a href="#7-stop-being-clever-with-usememo-and-usecallback">7. Stop being clever with useMemo and useCallback</a></li><li class="toc-l2"><a href="#8-errors-and-loading-states-are-part-of-the-design">8. Errors and loading states are part of the design</a></li><li class="toc-l2"><a href="#9-test-the-contract-not-the-implementation">9. Test the contract, not the implementation</a></li><li class="toc-l2"><a href="#10-write-components-like-the-next-person-who-reads-them-is-on-a-deadline">10. Write components like the next person who reads them is on a deadline</a></li><li class="toc-l2"><a href="#a-short-closing-thought">A short closing thought</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/typescript-patterns-everyday-codebases/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-typescript-patterns-everyday-codebases-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-typescript-patterns-everyday-codebases-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-typescript-patterns-everyday-codebases-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-bg)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-glow)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-grid)" />
+    <g transform="translate(302 200) rotate(318)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">TypeScript Patterns That Make Your Codebase Easier to Live With</span></h3>
+        <p class="card-feature-desc">Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/database-schema-design/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-database-schema-design-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-database-schema-design-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-database-schema-design-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-database-schema-design-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-database-schema-design-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-bg)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-glow)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-dots)" />
+    <g transform="translate(288 200) rotate(269)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Designing a Database Schema You Won&#39;t Regret in Six Months</span></h3>
+        <p class="card-feature-desc">Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/debugging-modern-web-apps/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-debugging-modern-web-apps-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-debugging-modern-web-apps-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-debugging-modern-web-apps-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-debugging-modern-web-apps-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-debugging-modern-web-apps-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-bg)" />
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-glow)" />
+      <g transform="translate(315 200) rotate(284)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Debugging Modern Web Apps: A Field Guide</span></h3>
+        <p class="card-feature-desc">A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

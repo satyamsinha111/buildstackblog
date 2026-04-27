@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Designing a Database Schema You Won&#39;t Regret in Six Months — BuildStack</title>
+<meta name="description" content="Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/database-schema-design/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/database-schema-design/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="Designing a Database Schema You Won&#39;t Regret in Six Months — BuildStack" />
+<meta property="og:description" content="Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Designing a Database Schema You Won&#39;t Regret in Six Months — BuildStack" />
+<meta name="twitter:description" content="Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Designing a Database Schema You Won't Regret in Six Months","description":"Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.","datePublished":"2026-03-21","dateModified":"2026-03-21","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/database-schema-design/"},"keywords":"Database, PostgreSQL, Architecture, Backend","articleSection":"Best Practices","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/best-practices/">Best Practices</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #475569, #334155, #0f172a);"></span>Best Practices</p>
+          <h1 class="post-title">Designing a Database Schema You Won&#39;t Regret in Six Months</h1>
+          <p class="post-lede">Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-03-21">March 21, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">6 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,309 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-database-schema-design-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-database-schema-design-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-database-schema-design-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-database-schema-design-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-database-schema-design-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-bg)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-glow)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-dots)" />
+    <g transform="translate(288 200) rotate(269)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>Schema decisions you make in week one of a project ripple out for years. The wrong choice for an <code>id</code> column can quietly become the most expensive bug in the codebase by the time you have a million rows. This guide is about the schema decisions that matter most, with the reasoning that goes into them.</p>
+<p>We&#39;ll use PostgreSQL throughout, because it&#39;s the right answer for almost any new project in 2026 unless you have a specific reason otherwise.</p>
+<h2 id="start-with-a-real-entity-relationship-sketch"><a class="heading-anchor" href="#start-with-a-real-entity-relationship-sketch" aria-hidden="true" tabindex="-1"></a>Start with a real entity-relationship sketch</h2>
+<p>Before opening your ORM, sketch the entities on paper. The goal is to answer two questions for every one:</p>
+<ul>
+<li><strong>What identifies it?</strong> Is there a natural key, or do we need a synthetic one?</li>
+<li><strong>What does it relate to, and how?</strong> One-to-one, one-to-many, many-to-many?</li>
+</ul>
+<p>If you can&#39;t answer those for an entity, you don&#39;t understand it well enough to model it yet. Talk to whoever does.</p>
+<h2 id="pick-your-primary-key-carefully"><a class="heading-anchor" href="#pick-your-primary-key-carefully" aria-hidden="true" tabindex="-1"></a>Pick your primary key carefully</h2>
+<p>This is the decision people most often regret. Three reasonable choices:</p>
+<ul>
+<li><strong>Auto-incrementing integers</strong> (<code>bigserial</code>). Smallest, fastest, easiest to read. Bad for distributed inserts and exposes record counts.</li>
+<li><strong>UUIDs</strong> (<code>uuid</code>). Globally unique, safe to expose. Larger, and <code>gen_random_uuid()</code> is not great for index locality.</li>
+<li><strong>ULIDs / KSUIDs / UUIDv7</strong>. Time-sortable identifiers. The best of both worlds for most modern apps.</li>
+</ul>
+<p>Our default in 2026 is <strong>UUIDv7</strong> (or ULID where v7 isn&#39;t available natively). They&#39;re sortable by creation time, which keeps indexes warm and pagination predictable, while still being safe to put in URLs.</p>
+<p>Whatever you choose, <em>don&#39;t mix</em> across tables. Pick one and stay with it.</p>
+<h2 id="use-real-types-not-string-for-everything"><a class="heading-anchor" href="#use-real-types-not-string-for-everything" aria-hidden="true" tabindex="-1"></a>Use real types, not &quot;string for everything&quot;</h2>
+<p>Postgres has rich types. Use them.</p>
+<ul>
+<li><code>timestamptz</code> for any datetime. Never <code>timestamp without time zone</code>. Time zones are real; storing UTC and converting at the edges is the only sane policy.</li>
+<li><code>numeric(10, 2)</code> for money. Never <code>float</code>. Never <code>double</code>. The first time you sum 0.1 + 0.2 in floating point you&#39;ll wish you hadn&#39;t.</li>
+<li><code>boolean</code> for booleans. Not <code>0/1</code>, not <code>&#39;Y&#39;/&#39;N&#39;</code>.</li>
+<li><code>jsonb</code> for genuinely document-shaped data. Not as a junk drawer for fields you didn&#39;t want to think about.</li>
+<li><code>text</code> over <code>varchar(n)</code>. There is no performance benefit to <code>varchar(255)</code> in Postgres, and the length limit will eventually bite you.</li>
+</ul>
+<p>A few minutes here saves a week of <code>to_timestamp(...)</code> and <code>cast(... as numeric)</code> later.</p>
+<h2 id="foreign-keys-are-not-optional"><a class="heading-anchor" href="#foreign-keys-are-not-optional" aria-hidden="true" tabindex="-1"></a>Foreign keys are not optional</h2>
+<p>Every relationship between tables should be enforced with a foreign key constraint. We&#39;ve never met a team that turned foreign keys off and didn&#39;t regret it.</p>
+<p>Two specific things to do:</p>
+<ul>
+<li>Use <code>ON DELETE</code> rules deliberately. <code>RESTRICT</code> is the safest default; <code>CASCADE</code> is fine for genuinely owned data (a comment cascades from a deleted post). Avoid <code>SET NULL</code> unless it actually models the domain.</li>
+<li>Index your foreign keys. Postgres doesn&#39;t do it for you, and unindexed foreign keys lead to slow joins and lock contention on deletes.</li>
+</ul>
+<pre><code class="language-sql">ALTER TABLE comments
+  ADD CONSTRAINT comments_post_fk
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE;
+
+CREATE INDEX comments_post_id_idx ON comments(post_id);
+</code></pre>
+<p>Do this from day one. Retrofitting foreign keys onto a live database is an unhappy weekend.</p>
+<h2 id="index-for-the-queries-you-actually-run"><a class="heading-anchor" href="#index-for-the-queries-you-actually-run" aria-hidden="true" tabindex="-1"></a>Index for the queries you actually run</h2>
+<p>The two extremes are both wrong:</p>
+<ul>
+<li><strong>No indexes</strong>: every query scans the whole table.</li>
+<li><strong>Too many indexes</strong>: writes get slower, and the indexes you really need disappear into noise.</li>
+</ul>
+<p>A workable rule:</p>
+<ol>
+<li>Index every foreign key.</li>
+<li>Index columns that appear in <code>WHERE</code> and <code>ORDER BY</code> on hot endpoints.</li>
+<li>Use composite indexes when queries filter on multiple columns together (<code>(user_id, created_at)</code>).</li>
+<li>Add indexes when you have actual evidence — <code>EXPLAIN ANALYZE</code> showing a sequential scan on a slow query.</li>
+</ol>
+<p>Don&#39;t index <code>boolean</code> columns alone. They have terrible selectivity. Index them as part of a composite if you need to.</p>
+<h2 id="soft-deletes-do-them-on-purpose-not-by-default"><a class="heading-anchor" href="#soft-deletes-do-them-on-purpose-not-by-default" aria-hidden="true" tabindex="-1"></a>Soft deletes: do them on purpose, not by default</h2>
+<p>Soft deletes (<code>deleted_at</code> columns) are useful for:</p>
+<ul>
+<li>Anything users see and might want back (&quot;undelete this post&quot;).</li>
+<li>Anything tied to compliance or audit trails.</li>
+</ul>
+<p>They&#39;re a footgun for everything else. Once you have soft deletes, every query needs to remember to filter them out. Forgetting once means showing deleted data. Forgetting in a foreign key check means orphaned references.</p>
+<p>If you adopt soft deletes, do it consistently:</p>
+<ul>
+<li>A <code>deleted_at timestamptz</code> column.</li>
+<li>A view or scope that hides deleted rows by default.</li>
+<li>A clear policy on whether unique constraints include soft-deleted rows (probably not).</li>
+</ul>
+<p>If you don&#39;t need them, don&#39;t preemptively add them.</p>
+<h2 id="use-enums-but-carefully"><a class="heading-anchor" href="#use-enums-but-carefully" aria-hidden="true" tabindex="-1"></a>Use enums, but carefully</h2>
+<p>Postgres enums are great for fields with a small, stable set of values (<code>order_status</code>, <code>subscription_plan</code>). They show up nicely in tooling and constrain the values to the ones you&#39;ve defined.</p>
+<p>The catch: changing an enum requires a migration. Adding a value is fine, removing one is painful.</p>
+<p>Our rule of thumb:</p>
+<ul>
+<li>Use enums when the set rarely changes and is conceptually closed (e.g. <code>status</code>).</li>
+<li>Use a lookup table when the set might grow over time (e.g. <code>country</code>, <code>plan</code>).</li>
+</ul>
+<h2 id="dont-be-clever-with-jsonb"><a class="heading-anchor" href="#dont-be-clever-with-jsonb" aria-hidden="true" tabindex="-1"></a>Don&#39;t be clever with <code>jsonb</code></h2>
+<p><code>jsonb</code> is a powerful escape hatch. It&#39;s also where schema design goes to die. The &quot;we&#39;ll just put it in <code>metadata</code> for now&quot; pattern leads to:</p>
+<ul>
+<li>Untyped fields scattered across the codebase.</li>
+<li>Queries that can&#39;t use indexes.</li>
+<li>A surprise when two engineers store the same concept under different keys.</li>
+</ul>
+<p>Use <code>jsonb</code> for:</p>
+<ul>
+<li>Genuinely user-defined data (&quot;custom fields&quot; on a record).</li>
+<li>Snapshots you want to keep verbatim (a webhook payload, an audit log entry).</li>
+<li>Data that changes shape over time and where you don&#39;t need to query individual fields often.</li>
+</ul>
+<p>Don&#39;t use <code>jsonb</code> to avoid making schema decisions. Make the decisions.</p>
+<h2 id="audit-fields-that-earn-their-keep"><a class="heading-anchor" href="#audit-fields-that-earn-their-keep" aria-hidden="true" tabindex="-1"></a>Audit fields that earn their keep</h2>
+<p>Every table benefits from a few audit fields:</p>
+<ul>
+<li><code>created_at timestamptz NOT NULL DEFAULT now()</code></li>
+<li><code>updated_at timestamptz NOT NULL DEFAULT now()</code> (with a trigger to keep it fresh)</li>
+<li><code>created_by</code> / <code>updated_by</code> for anything user-facing</li>
+</ul>
+<p>These are cheap to add and invaluable when something goes wrong. The first time you have to debug &quot;who changed this row and when,&quot; you&#39;ll be glad they&#39;re there.</p>
+<h2 id="migrations-are-part-of-your-schema"><a class="heading-anchor" href="#migrations-are-part-of-your-schema" aria-hidden="true" tabindex="-1"></a>Migrations are part of your schema</h2>
+<p>Schema isn&#39;t just the current state — it&#39;s the path that got you there. A few habits make life easier:</p>
+<ul>
+<li>Every change goes through a migration tool. No &quot;I just ran some SQL on the prod database to fix it.&quot;</li>
+<li>Migrations are forward-only. If you need to undo, write a new migration that undoes it.</li>
+<li>Test destructive migrations on a copy of production data, not just on a dev database with five rows.</li>
+</ul>
+<p>In a team of any size, migrations are the schema&#39;s source of truth, not the live database.</p>
+<h2 id="a-small-concrete-example"><a class="heading-anchor" href="#a-small-concrete-example" aria-hidden="true" tabindex="-1"></a>A small concrete example</h2>
+<p>Here&#39;s a respectable schema for a blog with users, posts, and comments:</p>
+<pre><code class="language-sql">CREATE TABLE users (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  email text UNIQUE NOT NULL,
+  display_name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE posts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  author_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  slug text UNIQUE NOT NULL,
+  title text NOT NULL,
+  body text NOT NULL,
+  status text NOT NULL CHECK (status IN (&#39;draft&#39;, &#39;published&#39;)),
+  published_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX posts_author_idx ON posts(author_id);
+CREATE INDEX posts_published_idx ON posts(published_at DESC) WHERE status = &#39;published&#39;;
+</code></pre>
+<p>Boring, explicit, and easy to evolve. That&#39;s the goal.</p>
+<p>Schema design isn&#39;t about cleverness. It&#39;s about leaving as few sharp edges as possible for the version of yourself who comes back to this code in six months and has to ship something on a Friday afternoon. Make the obvious choices, and use the time you save for the parts that genuinely require thinking.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/database/">Database</a><a class="chip" href="/tag/postgresql/">PostgreSQL</a><a class="chip" href="/tag/architecture/">Architecture</a><a class="chip" href="/tag/backend/">Backend</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published March 21, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=Designing%20a%20Database%20Schema%20You%20Won&#39;t%20Regret%20in%20Six%20Months%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdatabase-schema-design%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdatabase-schema-design%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdatabase-schema-design%2F&amp;t=Designing%20a%20Database%20Schema%20You%20Won&#39;t%20Regret%20in%20Six%20Months" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#start-with-a-real-entity-relationship-sketch">Start with a real entity-relationship sketch</a></li><li class="toc-l2"><a href="#pick-your-primary-key-carefully">Pick your primary key carefully</a></li><li class="toc-l2"><a href="#use-real-types-not-string-for-everything">Use real types, not &quot;string for everything&quot;</a></li><li class="toc-l2"><a href="#foreign-keys-are-not-optional">Foreign keys are not optional</a></li><li class="toc-l2"><a href="#index-for-the-queries-you-actually-run">Index for the queries you actually run</a></li><li class="toc-l2"><a href="#soft-deletes-do-them-on-purpose-not-by-default">Soft deletes: do them on purpose, not by default</a></li><li class="toc-l2"><a href="#use-enums-but-carefully">Use enums, but carefully</a></li><li class="toc-l2"><a href="#dont-be-clever-with-jsonb">Don&#39;t be clever with jsonb</a></li><li class="toc-l2"><a href="#audit-fields-that-earn-their-keep">Audit fields that earn their keep</a></li><li class="toc-l2"><a href="#migrations-are-part-of-your-schema">Migrations are part of your schema</a></li><li class="toc-l2"><a href="#a-small-concrete-example">A small concrete example</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/monolith-vs-microservices/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-monolith-vs-microservices-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-monolith-vs-microservices-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-monolith-vs-microservices-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-monolith-vs-microservices-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-monolith-vs-microservices-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-monolith-vs-microservices-bg)" />
+      <rect width="600" height="400" fill="url(#cover-monolith-vs-microservices-glow)" />
+      <g transform="translate(305 200) rotate(205)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-monolith-vs-microservices-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Monolith vs Microservices: When to Choose What</span></h3>
+        <p class="card-feature-desc">An honest look at the architectural debate that won&#39;t go away — when a monolith is the right call, when microservices earn their complexity, and the modular middle ground most teams should start with.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/debugging-modern-web-apps/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-debugging-modern-web-apps-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-debugging-modern-web-apps-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-debugging-modern-web-apps-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-debugging-modern-web-apps-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-debugging-modern-web-apps-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-bg)" />
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-glow)" />
+      <g transform="translate(315 200) rotate(284)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Debugging Modern Web Apps: A Field Guide</span></h3>
+        <p class="card-feature-desc">A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/typescript-patterns-everyday-codebases/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-typescript-patterns-everyday-codebases-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-typescript-patterns-everyday-codebases-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-typescript-patterns-everyday-codebases-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-bg)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-glow)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-grid)" />
+    <g transform="translate(302 200) rotate(318)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">TypeScript Patterns That Make Your Codebase Easier to Live With</span></h3>
+        <p class="card-feature-desc">Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

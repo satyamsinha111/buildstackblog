@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BuildStack — Practical guides for modern web developers.</title>
+<meta name="description" content="BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="BuildStack — Practical guides for modern web developers." />
+<meta property="og:description" content="BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="BuildStack — Practical guides for modern web developers." />
+<meta name="twitter:description" content="BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"BuildStack","url":"https://buildstack.dev","description":"BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.","inLanguage":"en-US","publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"potentialAction":{"@type":"SearchAction","target":"https://buildstack.dev/blog/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link is-active" href="/">Home</a><a class="nav-link" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link is-active" href="/">Home</a><a class="mobile-nav-link" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<section class="hero">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-grid">
+          <div class="hero-main">
+            <p class="eyebrow eyebrow-dot">
+              <span class="eyebrow-pill"></span>
+              <span>The BuildStack Review · Issue 01</span>
+            </p>
+            <h1 class="hero-title">Practical writing for <em>people who ship</em> software.</h1>
+            <p class="hero-desc">Independent essays on web development, AI tools, and the everyday craft of modern engineering — written by working developers, for working developers.</p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="/blog/">Read the latest issue</a>
+              <a class="btn btn-secondary" href="/about/">Our editorial standards</a>
+            </div>
+          </div>
+          <aside class="hero-stats">
+            <dl>
+              <div><dt class="eyebrow">Articles</dt><dd>20</dd></div>
+              <div><dt class="eyebrow">Topics</dt><dd>5</dd></div>
+              <div><dt class="eyebrow">Updated</dt><dd>Weekly</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+<section class="container section">
+          <div class="section-head">
+            <h2 class="eyebrow">This issue</h2>
+            <a class="section-link" href="/blog/">All articles →</a>
+          </div>
+          <a class="card-lead" href="/blog/build-authentication-in-nextjs/">
+      <div class="card-lead-cover"><div class="cover cover-lead" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-build-authentication-in-nextjs-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-build-authentication-in-nextjs-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-build-authentication-in-nextjs-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-build-authentication-in-nextjs-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-build-authentication-in-nextjs-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-bg)" />
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-glow)" />
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-dots)" />
+    <g transform="translate(288 200) rotate(110)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-vignette)" />
+    </svg>
+  </div></div>
+      <div class="card-lead-body">
+        <div class="eyebrow">
+          <span>Lead story</span>
+          <span aria-hidden="true">·</span>
+          <span>Web Dev</span>
+        </div>
+        <h2 class="card-lead-title"><span class="title-underline">How to Build Authentication in Next.js: A Step-by-Step Walkthrough</span></h2>
+        <p class="card-lead-desc">A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas.</p>
+        <div class="card-meta">
+          <span>April 18, 2026</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min read</span>
+          <span aria-hidden="true">·</span><span>BuildStack Editorial</span>
+        </div>
+      </div>
+    </a>
+        </section>
+<section class="container section section-bordered">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Editor's selection</p>
+              <h2 class="section-title">Featured this week</h2>
+            </div>
+          </div>
+          <div class="grid-3">
+            <a class="card-feature" href="/blog/best-ai-tools-for-developers-2026/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-best-ai-tools-for-developers-2026-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#d946ef" />
+          <stop offset="100%" stop-color="#f43f5e" />
+        </linearGradient>
+        <radialGradient id="cover-best-ai-tools-for-developers-2026-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-best-ai-tools-for-developers-2026-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-best-ai-tools-for-developers-2026-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-best-ai-tools-for-developers-2026-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-best-ai-tools-for-developers-2026-bg)" />
+      <rect width="600" height="400" fill="url(#cover-best-ai-tools-for-developers-2026-glow)" />
+      <rect width="600" height="400" fill="url(#cover-best-ai-tools-for-developers-2026-grid)" />
+    <g transform="translate(286 200) rotate(270)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">A</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">AI</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-best-ai-tools-for-developers-2026-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>AI</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">The Best AI Tools for Developers in 2026 (Used Daily, Not Just Tested)</span></h3>
+        <p class="card-feature-desc">An honest look at the AI tools that have actually changed how we work in 2026 — what they&#39;re great at, where they fall apart, and how to use them without becoming dependent on them.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/optimize-core-web-vitals/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-optimize-core-web-vitals-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f59e0b" />
+          <stop offset="100%" stop-color="#ef4444" />
+        </linearGradient>
+        <radialGradient id="cover-optimize-core-web-vitals-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-optimize-core-web-vitals-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-optimize-core-web-vitals-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-optimize-core-web-vitals-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-bg)" />
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-glow)" />
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-grid)" />
+    <g transform="translate(286 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(335)" fill="#7c2d12" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(5)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">P</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PERF</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Perf</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Optimize Core Web Vitals Without Breaking a Sweat</span></h3>
+        <p class="card-feature-desc">A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don&#39;t.</p>
+      </div>
+    </a>
+          </div>
+        </section>
+<section class="container section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Sections</p>
+          <h2 class="section-title">Browse by topic</h2>
+        </div>
+      </div>
+      <div class="cat-grid"><a class="cat-cell" href="/category/web-development/">
+        <div class="cat-cell-top">
+          <span class="cat-mark" style="background-image:linear-gradient(135deg, #0ea5e9, #6366f1, #7c3aed);">W</span>
+          <span class="cat-count">05 articles</span>
+        </div>
+        <div>
+          <h3 class="cat-name">Web Development</h3>
+          <p class="cat-desc">Frameworks, patterns, and the everyday craft of shipping reliable web applications.</p>
+        </div>
+        <span class="cat-cta"><span class="title-underline">Browse web dev</span> <span aria-hidden="true">→</span></span>
+      </a><a class="cat-cell" href="/category/ai-tools/">
+        <div class="cat-cell-top">
+          <span class="cat-mark" style="background-image:linear-gradient(135deg, #d946ef, #ec4899, #f43f5e);">A</span>
+          <span class="cat-count">02 articles</span>
+        </div>
+        <div>
+          <h3 class="cat-name">AI Tools</h3>
+          <p class="cat-desc">Honest reviews and practical workflows for using AI tooling without losing your edge as an engineer.</p>
+        </div>
+        <span class="cat-cta"><span class="title-underline">Browse ai</span> <span aria-hidden="true">→</span></span>
+      </a><a class="cat-cell" href="/category/developer-guides/">
+        <div class="cat-cell-top">
+          <span class="cat-mark" style="background-image:linear-gradient(135deg, #10b981, #14b8a6, #0891b2);">G</span>
+          <span class="cat-count">04 articles</span>
+        </div>
+        <div>
+          <h3 class="cat-name">Developer Guides</h3>
+          <p class="cat-desc">Step-by-step walkthroughs that turn fuzzy concepts into things you can actually build.</p>
+        </div>
+        <span class="cat-cta"><span class="title-underline">Browse guides</span> <span aria-hidden="true">→</span></span>
+      </a><a class="cat-cell" href="/category/performance/">
+        <div class="cat-cell-top">
+          <span class="cat-mark" style="background-image:linear-gradient(135deg, #f59e0b, #f97316, #ef4444);">P</span>
+          <span class="cat-count">01 articles</span>
+        </div>
+        <div>
+          <h3 class="cat-name">Performance</h3>
+          <p class="cat-desc">Core Web Vitals, profiling, and the small details that separate a fast site from a slow one.</p>
+        </div>
+        <span class="cat-cta"><span class="title-underline">Browse perf</span> <span aria-hidden="true">→</span></span>
+      </a><a class="cat-cell" href="/category/best-practices/">
+        <div class="cat-cell-top">
+          <span class="cat-mark" style="background-image:linear-gradient(135deg, #475569, #334155, #0f172a);">B</span>
+          <span class="cat-count">08 articles</span>
+        </div>
+        <div>
+          <h3 class="cat-name">Best Practices</h3>
+          <p class="cat-desc">Code reviews, architecture decisions, and engineering habits that hold up over time.</p>
+        </div>
+        <span class="cat-cta"><span class="title-underline">Browse practices</span> <span aria-hidden="true">→</span></span>
+      </a><div class="cat-cell cat-cell-empty" aria-hidden="true"></div></div>
+    </section>
+<section class="container section home-latest">
+      <div class="home-latest-main">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Recent</p>
+            <h2 class="section-title">Latest articles</h2>
+          </div>
+          <a class="section-link" href="/blog/">View all (20) →</a>
+        </div>
+        <div class="grid-2">
+          <a class="card-default" href="/blog/beginner-guide-to-rest-apis/">
+    <div class="cover cover-card" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-beginner-guide-to-rest-apis-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-beginner-guide-to-rest-apis-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-beginner-guide-to-rest-apis-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-bg)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-glow)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-grid)" />
+    <g transform="translate(303 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(189)" fill="#064e3b" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(219)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-vignette)" />
+    </svg>
+  </div>
+    <div class="card-default-body">
+      <div class="eyebrow">
+        <span>Guides</span>
+        <span aria-hidden="true">·</span>
+        <span class="mono">5 min</span>
+      </div>
+      <h3 class="card-default-title"><span class="title-underline">A Practical Beginner&#39;s Guide to REST APIs</span></h3>
+      <p class="card-default-desc">What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.</p>
+      <div class="card-default-date">April 9, 2026</div>
+    </div>
+  </a><a class="card-default" href="/blog/deploy-fullstack-app-walkthrough/">
+    <div class="cover cover-card" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-deploy-fullstack-app-walkthrough-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-bg)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-glow)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-dots)" />
+    <g transform="translate(285 200) rotate(5)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-vignette)" />
+    </svg>
+  </div>
+    <div class="card-default-body">
+      <div class="eyebrow">
+        <span>Guides</span>
+        <span aria-hidden="true">·</span>
+        <span class="mono">5 min</span>
+      </div>
+      <h3 class="card-default-title"><span class="title-underline">How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</span></h3>
+      <p class="card-default-desc">From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview.</p>
+      <div class="card-default-date">April 6, 2026</div>
+    </div>
+  </a><a class="card-default" href="/blog/react-server-components-mastery/">
+    <div class="cover cover-card" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-react-server-components-mastery-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-react-server-components-mastery-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-react-server-components-mastery-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-react-server-components-mastery-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-react-server-components-mastery-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-bg)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-glow)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-dots)" />
+    <g transform="translate(321 200) rotate(91)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-vignette)" />
+    </svg>
+  </div>
+    <div class="card-default-body">
+      <div class="eyebrow">
+        <span>Web Dev</span>
+        <span aria-hidden="true">·</span>
+        <span class="mono">5 min</span>
+      </div>
+      <h3 class="card-default-title"><span class="title-underline">Mastering React Server Components in Next.js</span></h3>
+      <p class="card-default-desc">Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale.</p>
+      <div class="card-default-date">April 2, 2026</div>
+    </div>
+  </a><a class="card-default" href="/blog/typescript-patterns-everyday-codebases/">
+    <div class="cover cover-card" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-typescript-patterns-everyday-codebases-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-typescript-patterns-everyday-codebases-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-typescript-patterns-everyday-codebases-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-bg)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-glow)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-grid)" />
+    <g transform="translate(302 200) rotate(318)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-vignette)" />
+    </svg>
+  </div>
+    <div class="card-default-body">
+      <div class="eyebrow">
+        <span>Practices</span>
+        <span aria-hidden="true">·</span>
+        <span class="mono">5 min</span>
+      </div>
+      <h3 class="card-default-title"><span class="title-underline">TypeScript Patterns That Make Your Codebase Easier to Live With</span></h3>
+      <p class="card-default-desc">Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler.</p>
+      <div class="card-default-date">March 29, 2026</div>
+    </div>
+  </a><a class="card-default" href="/blog/tailwind-vs-css-in-js/">
+    <div class="cover cover-card" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-tailwind-vs-css-in-js-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-tailwind-vs-css-in-js-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-tailwind-vs-css-in-js-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-tailwind-vs-css-in-js-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-tailwind-vs-css-in-js-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-bg)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-glow)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-grid)" />
+    <g transform="translate(308 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(229)" fill="#312e81" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(259)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-vignette)" />
+    </svg>
+  </div>
+    <div class="card-default-body">
+      <div class="eyebrow">
+        <span>Web Dev</span>
+        <span aria-hidden="true">·</span>
+        <span class="mono">5 min</span>
+      </div>
+      <h3 class="card-default-title"><span class="title-underline">Tailwind CSS vs CSS-in-JS: How to Actually Choose</span></h3>
+      <p class="card-default-desc">A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team.</p>
+      <div class="card-default-date">March 25, 2026</div>
+    </div>
+  </a><a class="card-default" href="/blog/database-schema-design/">
+    <div class="cover cover-card" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-database-schema-design-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-database-schema-design-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-database-schema-design-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-database-schema-design-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-database-schema-design-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-bg)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-glow)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-dots)" />
+    <g transform="translate(288 200) rotate(269)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-vignette)" />
+    </svg>
+  </div>
+    <div class="card-default-body">
+      <div class="eyebrow">
+        <span>Practices</span>
+        <span aria-hidden="true">·</span>
+        <span class="mono">6 min</span>
+      </div>
+      <h3 class="card-default-title"><span class="title-underline">Designing a Database Schema You Won&#39;t Regret in Six Months</span></h3>
+      <p class="card-default-desc">Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.</p>
+      <div class="card-default-date">March 21, 2026</div>
+    </div>
+  </a>
+        </div>
+        <a class="btn btn-secondary mobile-only-cta" href="/blog/">View all articles</a>
+      </div>
+      <aside class="home-latest-aside">
+        <div class="sticky-aside">
+          <p class="eyebrow">Editor's picks</p>
+          <h3 class="aside-title">Reader favorites</h3>
+          <p class="aside-desc">Hand-picked deep dives from the archive — the pieces our readers keep coming back to.</p>
+          <ol class="picks-list">
+            <li>
+                  <span class="picks-num">01</span>
+                  <a href="/blog/best-ai-tools-for-developers-2026/" class="picks-link">
+                    <p class="eyebrow eyebrow-subtle">ai tools</p>
+                    <p class="picks-title">The Best AI Tools for Developers in 2026 (Used Daily, Not Just Tested)</p>
+                  </a>
+                </li><li>
+                  <span class="picks-num">02</span>
+                  <a href="/blog/optimize-core-web-vitals/" class="picks-link">
+                    <p class="eyebrow eyebrow-subtle">performance</p>
+                    <p class="picks-title">How to Optimize Core Web Vitals Without Breaking a Sweat</p>
+                  </a>
+                </li><li>
+                  <span class="picks-num">03</span>
+                  <a href="/blog/beginner-guide-to-rest-apis/" class="picks-link">
+                    <p class="eyebrow eyebrow-subtle">developer guides</p>
+                    <p class="picks-title">A Practical Beginner&#39;s Guide to REST APIs</p>
+                  </a>
+                </li><li>
+                  <span class="picks-num">04</span>
+                  <a href="/blog/deploy-fullstack-app-walkthrough/" class="picks-link">
+                    <p class="eyebrow eyebrow-subtle">developer guides</p>
+                    <p class="picks-title">How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</p>
+                  </a>
+                </li><li>
+                  <span class="picks-num">05</span>
+                  <a href="/blog/react-server-components-mastery/" class="picks-link">
+                    <p class="eyebrow eyebrow-subtle">web development</p>
+                    <p class="picks-title">Mastering React Server Components in Next.js</p>
+                  </a>
+                </li>
+          </ol>
+        </div>
+      </aside>
+    </section>
+<section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

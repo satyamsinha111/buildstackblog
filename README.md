@@ -1,198 +1,151 @@
 # BuildStack
 
-A production-ready Next.js + Tailwind CSS blog platform for **web development, AI tools, and developer guides**. Built to be fast, accessible, SEO-clean, and AdSense-friendly out of the box.
+> Practical guides for modern web developers, AI tools, and engineering best practices.
 
-> Independent writing for working developers. No clickbait, no fluff.
-
----
-
-## What's inside
-
-- **Next.js 15** (App Router, React 19, fully typed)
-- **Tailwind CSS** with the typography plugin and a custom design system
-- **20 long-form articles** (800–1200 words each) on real engineering topics
-- **Markdown content layer** with frontmatter (`gray-matter` + `react-markdown` + GFM)
-- **SEO-first**: per-page metadata, Open Graph, Twitter cards, JSON-LD Article schema, automatic sitemap and robots
-- **Search** across all articles, **categories**, and **tag** pages
-- **Trust pages**: real About, Contact (with form UI), Privacy Policy (cookies + ads + analytics disclosure), Terms & Conditions
-- **Accessibility**: skip-to-content link, semantic landmarks, keyboard-friendly navigation, visible focus rings
-- **Performance**: ~107 kB first-load JS, fully static pre-rendered routes, font subsetting via `next/font`
+A static, SEO-friendly editorial blog written in **plain HTML, CSS, and JavaScript**. No build step. No framework. No package manager. Every page in this repository is a real, hand-editable `.html` file.
 
 ---
 
-## Project structure
+## What's in this repo
 
 ```
 .
-├── app/
-│   ├── layout.tsx              # Root layout, metadata, fonts, Navbar/Footer
-│   ├── page.tsx                # Home page (hero, featured, categories, latest)
-│   ├── globals.css             # Tailwind base + design tokens
-│   ├── not-found.tsx           # Custom 404
-│   ├── sitemap.ts              # Dynamic sitemap.xml
-│   ├── robots.ts               # robots.txt
-│   ├── blog/
-│   │   ├── page.tsx            # Blog index (with search + category filter)
-│   │   └── [slug]/page.tsx     # Individual post (SEO + related)
-│   ├── category/[slug]/        # Per-category archive
-│   ├── tag/[slug]/             # Per-tag archive
-│   ├── about/                  # About page
-│   ├── contact/                # Contact page (with form)
-│   ├── privacy-policy/         # Privacy Policy
-│   └── terms/                  # Terms & Conditions
-├── components/
-│   ├── Navbar.tsx              # Sticky responsive nav
-│   ├── Footer.tsx              # Footer with all important links
-│   ├── Hero.tsx                # Home hero section
-│   ├── BlogCard.tsx            # Reusable card (3 variants)
-│   ├── CategoryGrid.tsx        # Category overview
-│   ├── CategoryFilter.tsx      # Filter chips (client)
-│   ├── SearchBar.tsx           # Live client-side search
-│   ├── SubscribeCard.tsx       # Newsletter UI
-│   ├── ContactForm.tsx         # Validated contact form
-│   ├── MarkdownContent.tsx     # Markdown -> HTML renderer
-│   ├── PageHeader.tsx          # Reusable page header
-│   └── Logo.tsx
-├── content/
-│   └── posts/                  # 20 markdown articles with frontmatter
-├── lib/
-│   ├── posts.ts                # Markdown loader, search, related-post logic
-│   ├── categories.ts           # Category metadata
-│   └── site.ts                 # Site config (name, URL, nav, footer, etc.)
-├── public/
-│   └── favicon.svg
-├── next.config.mjs
-├── tailwind.config.ts
-├── postcss.config.js
-├── tsconfig.json
-└── package.json
+├── index.html                         Home page
+├── 404.html                           Custom not-found page
+├── about/index.html
+├── contact/index.html
+├── privacy-policy/index.html
+├── terms/index.html
+├── blog/
+│   ├── index.html                     Article archive (search + filter)
+│   └── <slug>/index.html              One folder per article (×20)
+├── category/<slug>/index.html         One per category (×5)
+├── tag/<slug>/index.html              One per tag
+├── assets/
+│   ├── styles.css                     ~40 KB hand-written CSS, light + dark themes
+│   └── main.js                        ~6 KB vanilla JS (theme, nav, search, progress bar)
+├── favicon.svg
+├── sitemap.xml
+├── robots.txt
+└── rss.xml
 ```
+
+That's it. There is no `package.json`, no `node_modules`, no build script, no compile step. What you see is what gets shipped.
 
 ---
 
-## Getting started
+## Run it locally
 
-### Prerequisites
-
-- Node.js 20+ and npm 10+
-
-### Install
+Pick any static file server. Examples:
 
 ```bash
-npm install --legacy-peer-deps
+# Python (built into macOS / most Linux)
+python3 -m http.server 3000
+
+# Node (no install)
+npx http-server -p 3000
+
+# PHP
+php -S localhost:3000
 ```
 
-> The `--legacy-peer-deps` flag is currently recommended because some dependencies (`react-markdown`, ESLint plugins) lag slightly behind React 19's peer ranges. Drop it once those catch up.
+Then open <http://localhost:3000>.
 
-### Run in development
+You **can** also open `index.html` directly via `file://`, but absolute paths like `/blog/...` won't resolve there — use a local server for accurate previews.
+
+---
+
+## Editing content
+
+### A blog post
+
+Open `blog/<slug>/index.html` in any editor. The article body lives inside `<article class="post-body">`. Heading IDs already exist for in-page anchors and the table of contents. Update the `<title>`, `<meta name="description">`, the OpenGraph/Twitter tags, and the JSON-LD `<script type="application/ld+json">` block at the top so SEO metadata stays in sync.
+
+### Adding a new post
+
+1. Create a folder `blog/my-new-post/` and copy any existing post's `index.html` into it as a starting template.
+2. Replace the title, description, date, body, related articles.
+3. Add a card linking to it on:
+   - `index.html` (homepage — Latest section)
+   - `blog/index.html` (archive grid)
+   - `category/<your-category>/index.html`
+   - any matching `tag/<tag>/index.html`
+4. Add an entry in `sitemap.xml` and (optionally) `rss.xml`.
+
+### A static page (about / contact / privacy / terms)
+
+Edit the corresponding `index.html`. They share the same shell as every other page, so you can copy markup between them freely.
+
+### Site-wide changes (header, footer, nav)
+
+The header and footer are duplicated into every HTML file (this is the cost of "no build step"). Use a project-wide find/replace in your editor when the brand, nav links, or footer changes.
+
+### Styling
+
+Edit `assets/styles.css`. CSS custom properties at the top of the file define the design tokens (colors for both themes, font stacks, spacing, radii). The light theme is the default and the dark theme uses `[data-theme="dark"]` and `prefers-color-scheme: dark`.
+
+### Behaviour
+
+Edit `assets/main.js`. It handles:
+
+- Theme toggle (with `localStorage` persistence)
+- Mobile navigation drawer
+- Sticky-on-scroll header shadow
+- Reading-progress bar on article pages
+- Client-side search dropdown (the search index is embedded inline in each page that uses search)
+- Share buttons
+
+---
+
+## SEO features (already wired up)
+
+- Per-page `<title>`, `<meta name="description">`, `<link rel="canonical">`
+- Open Graph (`og:type`, `og:title`, `og:description`, `og:image`, `og:url`) and Twitter Card meta on every page
+- JSON-LD structured data: `WebSite` schema on the home page, `Article` schema on every post (with author, dates, publisher, keywords)
+- Pre-rendered HTML — content is fully visible to crawlers without executing JavaScript
+- `sitemap.xml` with `lastmod`, `changefreq`, `priority`
+- `robots.txt` referencing the sitemap
+- `rss.xml` with the 30 most recent posts
+- Semantic HTML: `<article>`, `<header>`, `<main>`, `<nav>`, `<time datetime="...">`, breadcrumbs with proper `aria-label`
+- Skip-to-content link, focus-visible outlines, `aria-expanded` on the mobile menu, `aria-hidden` on decorative SVGs
+
+---
+
+## Design
+
+- Editorial publication aesthetic: serif display type (Fraunces), clean sans body (Inter), monospace numerals (JetBrains Mono)
+- Light + dark themes that respect system preference and persist user choice
+- Deterministic SVG cover art on each article (no image files, no external dependencies, unique-feeling per slug)
+- Drop cap on the first paragraph of every article body
+- Reading-progress bar on article pages
+- Sticky table of contents on wide viewports
+
+All interactions degrade gracefully: a JS-disabled visitor still gets readable content.
+
+---
+
+## Deploy
+
+Anything that serves files works. Point the document root at this repository.
+
+**Netlify / Vercel / Cloudflare Pages**
+
+- Build command: *(none — leave blank)*
+- Publish directory: `.` (the repo root)
+
+**GitHub Pages**
 
 ```bash
-npm run dev
-# → http://localhost:3000
+# Either use the docs/ branch / Pages settings to serve the repo root,
+# or push the repo to a gh-pages branch.
 ```
 
-### Build for production
+**Nginx / Apache / S3 + CloudFront**
 
-```bash
-npm run build
-npm run start
-```
-
-The build pre-renders every page (home, blog index, every article, every category, every tag, plus trust pages) as static HTML. You can deploy the output to any host that runs Node.js (Vercel, Netlify, Fly, your own server).
+Serve the repo as the document root. URLs use trailing slashes (e.g. `/blog/build-authentication-in-nextjs/`) and resolve to `index.html` automatically on most servers.
 
 ---
 
-## Adding a new article
+## History
 
-1. Create a markdown file in `content/posts/` (the filename becomes the URL slug).
-2. Add frontmatter at the top:
-
-   ```md
-   ---
-   title: "Your Article Title"
-   description: "A clear, SEO-friendly description (150–180 chars works best)."
-   date: "2026-05-01"
-   category: "web-development"          # one of: web-development, ai-tools, developer-guides, performance, best-practices
-   tags: ["Next.js", "React"]           # any tags you like
-   author: "Your Name"
-   featured: false                      # set true for the homepage hero strip
-   ---
-   ```
-
-3. Write the body in Markdown. Headings, lists, code fences, tables, and links all work.
-4. Save. Hot reload picks it up immediately. The next build will:
-   - Generate a static page at `/blog/your-slug`
-   - Add it to the sitemap
-   - Index its tags and category
-   - Make it searchable from the navbar/blog page
-
----
-
-## Customizing the brand
-
-Most identity changes happen in two files:
-
-- **`lib/site.ts`** — site name, tagline, description, contact email, navigation, footer links.
-- **`tailwind.config.ts`** — color palette (`brand` and `ink` scales), fonts, typography defaults.
-
-Update those, and the changes propagate everywhere.
-
----
-
-## SEO checklist (already done)
-
-- [x] Per-page `<title>` and `<meta description>`
-- [x] Open Graph + Twitter card tags
-- [x] JSON-LD Article structured data on every blog post
-- [x] Canonical URLs
-- [x] Auto-generated `sitemap.xml` covering pages, posts, categories, and tags
-- [x] `robots.txt` allowing indexing + linking the sitemap
-- [x] Semantic HTML (`<article>`, `<header>`, `<nav>`, `<main>`, `<footer>`)
-- [x] Clean URL structure (`/blog/post-slug`)
-- [x] Internal linking (related posts, category links, tag links, breadcrumbs)
-- [x] Image-friendly setup (`next/image` enabled, AVIF/WebP)
-- [x] No `noindex` on content pages
-
----
-
-## AdSense readiness checklist
-
-- [x] Original, long-form, useful content (20 articles, 800–1200 words each)
-- [x] Real About page with editorial process and funding disclosure
-- [x] Real Contact page with email + form
-- [x] Privacy Policy covering cookies, analytics, and AdSense
-- [x] Terms & Conditions
-- [x] Clear navigation and footer
-- [x] Mobile-responsive design
-- [x] Fast, accessible UI (no dark patterns, no spammy elements)
-- [x] No fake claims or misleading content
-
-When you're ready to enable AdSense, add the verification snippet to `app/layout.tsx` (or use a `<Script>` component) and you're set.
-
----
-
-## Wiring the contact form & newsletter to a real backend
-
-The Contact form (`components/ContactForm.tsx`) and SubscribeCard (`components/SubscribeCard.tsx`) ship as polished UIs that simulate a successful submit. To make them real:
-
-- **Easiest path**: route the form to a hosted form service (Formspree, Resend's contact form template, Convertkit, etc.). Replace the `setTimeout` with a `fetch` to the service endpoint.
-- **API route**: add an `app/api/contact/route.ts` that emails you via Resend / SendGrid / nodemailer.
-
-The forms are intentionally backend-agnostic so you can plug in whatever you already use.
-
----
-
-## Scripts
-
-| Command         | What it does                            |
-| --------------- | --------------------------------------- |
-| `npm run dev`   | Start the dev server on `:3000`         |
-| `npm run build` | Build for production (static + SSG)     |
-| `npm run start` | Run the production server               |
-| `npm run lint`  | Lint the project with `eslint-config-next` |
-
----
-
-## License
-
-The starter code is yours to use as you like. The article content is the original work of the BuildStack editorial team — feel free to use it as a reference, but if you republish, please write your own.
+This repo previously used Next.js 15 + React + Tailwind, then a small Node.js static site generator. Both have been removed. What remains is the thing they were producing: plain HTML, plain CSS, plain JS.

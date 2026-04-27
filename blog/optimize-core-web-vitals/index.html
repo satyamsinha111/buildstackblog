@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to Optimize Core Web Vitals Without Breaking a Sweat — BuildStack</title>
+<meta name="description" content="A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don&#39;t." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/optimize-core-web-vitals/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/optimize-core-web-vitals/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="How to Optimize Core Web Vitals Without Breaking a Sweat — BuildStack" />
+<meta property="og:description" content="A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don&#39;t." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to Optimize Core Web Vitals Without Breaking a Sweat — BuildStack" />
+<meta name="twitter:description" content="A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don&#39;t." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Optimize Core Web Vitals Without Breaking a Sweat","description":"A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don't.","datePublished":"2026-04-12","dateModified":"2026-04-12","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/optimize-core-web-vitals/"},"keywords":"Performance, Core Web Vitals, SEO, Frontend","articleSection":"Performance","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/performance/">Performance</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #f59e0b, #f97316, #ef4444);"></span>Performance</p>
+          <h1 class="post-title">How to Optimize Core Web Vitals Without Breaking a Sweat</h1>
+          <p class="post-lede">A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don&#39;t.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-04-12">April 12, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,078 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-optimize-core-web-vitals-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f59e0b" />
+          <stop offset="100%" stop-color="#ef4444" />
+        </linearGradient>
+        <radialGradient id="cover-optimize-core-web-vitals-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-optimize-core-web-vitals-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-optimize-core-web-vitals-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-optimize-core-web-vitals-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-bg)" />
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-glow)" />
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-grid)" />
+    <g transform="translate(286 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(335)" fill="#7c2d12" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(5)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">P</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PERF</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-optimize-core-web-vitals-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>Every year someone declares Core Web Vitals &quot;solved.&quot; Every year, the median website is still measurably slower than it was the year before. The problem isn&#39;t that the metrics are mysterious. They&#39;re well-documented. The problem is that performance work feels abstract until your bounce rate climbs or a stakeholder forwards a Lighthouse report with red across the board.</p>
+<p>This is the playbook we wish someone had handed us when we started caring about this seriously. It&#39;s organized by metric, with the fixes that have actually moved real numbers on real sites.</p>
+<h2 id="what-core-web-vitals-actually-measure"><a class="heading-anchor" href="#what-core-web-vitals-actually-measure" aria-hidden="true" tabindex="-1"></a>What Core Web Vitals actually measure</h2>
+<p>Three metrics define modern web performance:</p>
+<ul>
+<li><strong>Largest Contentful Paint (LCP)</strong> — how quickly the main content of the page becomes visible. Goal: under 2.5 seconds.</li>
+<li><strong>Interaction to Next Paint (INP)</strong> — how snappy the page feels when a user clicks, taps, or types. Goal: under 200ms.</li>
+<li><strong>Cumulative Layout Shift (CLS)</strong> — how much the page jumps around as it loads. Goal: under 0.1.</li>
+</ul>
+<p>Two things matter about these numbers:</p>
+<ol>
+<li>They&#39;re measured at the <strong>75th percentile</strong> of real user visits, not your fast laptop on Wi-Fi.</li>
+<li>Lighthouse is a useful approximation, but field data (Chrome User Experience Report) is the ground truth Google actually uses for ranking signals.</li>
+</ol>
+<p>If you only fix what&#39;s broken in your local Lighthouse run, you&#39;ll miss what&#39;s broken for the user on a three-year-old Android phone, which is most of them.</p>
+<h2 id="fixing-lcp"><a class="heading-anchor" href="#fixing-lcp" aria-hidden="true" tabindex="-1"></a>Fixing LCP</h2>
+<p>LCP is almost always one of three things: a hero image, a hero heading, or the first big paragraph of content. Find which one with the Performance panel in Chrome DevTools — there&#39;s a literal &quot;LCP&quot; marker.</p>
+<p>Then, in order of impact:</p>
+<h3 id="serve-the-lcp-image-well"><a class="heading-anchor" href="#serve-the-lcp-image-well" aria-hidden="true" tabindex="-1"></a>Serve the LCP image well</h3>
+<p>If your LCP is an image, the win comes from three things working together:</p>
+<ul>
+<li><strong>Format</strong>: AVIF or WebP, with a JPEG fallback. AVIF cuts file size by 30–50% over JPEG without visible quality loss.</li>
+<li><strong>Dimensions</strong>: serve the actual size the browser will display, with a <code>srcset</code> so the right one gets picked. Stop sending 4000px hero images to a 390px phone screen.</li>
+<li><strong>Priority</strong>: <code>&lt;img fetchpriority=&quot;high&quot;&gt;</code> for the hero, <code>loading=&quot;lazy&quot;</code> for everything below the fold.</li>
+</ul>
+<p>In Next.js, the <code>&lt;Image&gt;</code> component does most of this for you, but only if you actually use it. Many slow Next.js sites have one offending <code>&lt;img&gt;</code> tag in a header somewhere.</p>
+<h3 id="get-the-html-out-the-door-faster"><a class="heading-anchor" href="#get-the-html-out-the-door-faster" aria-hidden="true" tabindex="-1"></a>Get the HTML out the door faster</h3>
+<p>Your LCP can&#39;t paint until the HTML arrives. Common culprits:</p>
+<ul>
+<li>A slow API call blocking server-side rendering. Cache aggressively or move it to client-side after the first paint.</li>
+<li>A bloated middleware that runs synchronous work on every request.</li>
+<li>Cold starts on serverless functions in regions far from your users.</li>
+</ul>
+<p>Time-to-first-byte (TTFB) is the foundation everything else sits on. If TTFB is 800ms, no amount of frontend optimization saves you.</p>
+<h3 id="stop-blocking-with-fonts"><a class="heading-anchor" href="#stop-blocking-with-fonts" aria-hidden="true" tabindex="-1"></a>Stop blocking with fonts</h3>
+<p>Custom fonts can delay LCP by hundreds of milliseconds if you let them. Use <code>font-display: swap</code>, preload only the weights you actually need, and self-host them. A single self-hosted variable font is faster than three external font files.</p>
+<h2 id="fixing-inp"><a class="heading-anchor" href="#fixing-inp" aria-hidden="true" tabindex="-1"></a>Fixing INP</h2>
+<p>INP replaced FID a couple of years ago and is dramatically harder to game. It measures <em>every</em> interaction across the page&#39;s lifetime, not just the first one.</p>
+<h3 id="break-up-long-tasks"><a class="heading-anchor" href="#break-up-long-tasks" aria-hidden="true" tabindex="-1"></a>Break up long tasks</h3>
+<p>Most INP regressions come from a single function blocking the main thread for too long. The browser can&#39;t respond to clicks while JavaScript is running.</p>
+<p>Practical fixes:</p>
+<ul>
+<li>Use <code>useDeferredValue</code> and <code>useTransition</code> in React 18+ for expensive renders.</li>
+<li>Move non-urgent work off the main thread — Web Workers are still underused.</li>
+<li>Yield to the browser inside long loops with <code>await new Promise(r =&gt; setTimeout(r, 0))</code> or the <code>scheduler.yield()</code> API.</li>
+</ul>
+<h3 id="audit-your-event-handlers"><a class="heading-anchor" href="#audit-your-event-handlers" aria-hidden="true" tabindex="-1"></a>Audit your event handlers</h3>
+<p>Look at every <code>onClick</code>, <code>onChange</code>, and <code>onScroll</code> in critical UI. Anything doing meaningful synchronous work is a candidate for INP regression. Specifically:</p>
+<ul>
+<li>Synchronous JSON parsing of large blobs</li>
+<li>Recomputing derived state across thousands of items</li>
+<li>Dispatching to a global store that re-renders the world</li>
+</ul>
+<h3 id="be-careful-with-hydration"><a class="heading-anchor" href="#be-careful-with-hydration" aria-hidden="true" tabindex="-1"></a>Be careful with hydration</h3>
+<p>If your framework is hydrating a huge component tree on the first user interaction, INP suffers. React Server Components, partial hydration, and &quot;islands&quot; architectures exist precisely to fix this.</p>
+<h2 id="fixing-cls"><a class="heading-anchor" href="#fixing-cls" aria-hidden="true" tabindex="-1"></a>Fixing CLS</h2>
+<p>CLS is the easiest of the three to fix, because the causes are short and well-known.</p>
+<ul>
+<li><strong>Images and videos without dimensions</strong> — set <code>width</code> and <code>height</code> (or <code>aspect-ratio</code> in CSS) so the browser reserves space.</li>
+<li><strong>Ads and embeds</strong> that load asynchronously into a 0px container, then push everything down.</li>
+<li><strong>Web fonts</strong> swapping in with different metrics. Use <code>size-adjust</code> or CSS <code>@font-face</code> descriptors to match fallback metrics.</li>
+<li><strong>Banners injected at the top of the page</strong> after first paint. Reserve their height up front, even if it&#39;s empty.</li>
+</ul>
+<p>Audit your site by scrolling slowly through it on a throttled connection. Anything that visibly jumps is a problem.</p>
+<h2 id="a-monitoring-loop-that-works"><a class="heading-anchor" href="#a-monitoring-loop-that-works" aria-hidden="true" tabindex="-1"></a>A monitoring loop that works</h2>
+<p>Optimization without measurement is theater. The minimum viable monitoring setup:</p>
+<ol>
+<li><strong>Real User Monitoring (RUM)</strong> — <code>web-vitals</code> npm package shipping to your analytics. Track LCP, INP, and CLS at the 75th percentile, broken out by page.</li>
+<li><strong>Lab data on every PR</strong> — a Lighthouse CI run on key pages, failing the build if scores regress meaningfully.</li>
+<li><strong>A budget</strong> — write down what&#39;s acceptable (e.g. &quot;LCP under 2.5s on the homepage at p75&quot;) and treat regressions as bugs.</li>
+</ol>
+<p>Without these three, every performance fix is a one-time hero project that quietly degrades a quarter later.</p>
+<h2 id="what-doesnt-actually-help"><a class="heading-anchor" href="#what-doesnt-actually-help" aria-hidden="true" tabindex="-1"></a>What doesn&#39;t actually help</h2>
+<p>A few things people spend time on that rarely move the needle:</p>
+<ul>
+<li>Obsessively shaving 5KB off a 200KB bundle while a 600KB image dominates LCP.</li>
+<li>Replacing your CSS framework &quot;for performance&quot; without measuring.</li>
+<li>Removing third-party scripts one at a time without checking which ones are actually expensive.</li>
+</ul>
+<h2 id="a-sane-order-of-operations"><a class="heading-anchor" href="#a-sane-order-of-operations" aria-hidden="true" tabindex="-1"></a>A sane order of operations</h2>
+<p>If you only have a day, do these in order:</p>
+<ol>
+<li>Profile a real page in DevTools and find your actual LCP element.</li>
+<li>Optimize that element first.</li>
+<li>Set widths and heights on every image in the critical viewport.</li>
+<li>Audit your three biggest third-party scripts.</li>
+<li>Add RUM and a Lighthouse CI check.</li>
+</ol>
+<p>You&#39;ll be done by lunch and your numbers will look noticeably better by Monday. That&#39;s usually enough to convince the rest of the team that performance is worth investing in — which is the actual unlock.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/performance/">Performance</a><a class="chip" href="/tag/core-web-vitals/">Core Web Vitals</a><a class="chip" href="/tag/seo/">SEO</a><a class="chip" href="/tag/frontend/">Frontend</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published April 12, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=How%20to%20Optimize%20Core%20Web%20Vitals%20Without%20Breaking%20a%20Sweat%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Foptimize-core-web-vitals%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Foptimize-core-web-vitals%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Foptimize-core-web-vitals%2F&amp;t=How%20to%20Optimize%20Core%20Web%20Vitals%20Without%20Breaking%20a%20Sweat" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#what-core-web-vitals-actually-measure">What Core Web Vitals actually measure</a></li><li class="toc-l2"><a href="#fixing-lcp">Fixing LCP</a></li><li class="toc-l3"><a href="#serve-the-lcp-image-well">Serve the LCP image well</a></li><li class="toc-l3"><a href="#get-the-html-out-the-door-faster">Get the HTML out the door faster</a></li><li class="toc-l3"><a href="#stop-blocking-with-fonts">Stop blocking with fonts</a></li><li class="toc-l2"><a href="#fixing-inp">Fixing INP</a></li><li class="toc-l3"><a href="#break-up-long-tasks">Break up long tasks</a></li><li class="toc-l3"><a href="#audit-your-event-handlers">Audit your event handlers</a></li><li class="toc-l3"><a href="#be-careful-with-hydration">Be careful with hydration</a></li><li class="toc-l2"><a href="#fixing-cls">Fixing CLS</a></li><li class="toc-l2"><a href="#a-monitoring-loop-that-works">A monitoring loop that works</a></li><li class="toc-l2"><a href="#what-doesnt-actually-help">What doesn&#39;t actually help</a></li><li class="toc-l2"><a href="#a-sane-order-of-operations">A sane order of operations</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/tailwind-vs-css-in-js/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-tailwind-vs-css-in-js-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-tailwind-vs-css-in-js-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-tailwind-vs-css-in-js-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-tailwind-vs-css-in-js-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-tailwind-vs-css-in-js-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-bg)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-glow)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-grid)" />
+    <g transform="translate(308 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(229)" fill="#312e81" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(259)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Tailwind CSS vs CSS-in-JS: How to Actually Choose</span></h3>
+        <p class="card-feature-desc">A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/debugging-modern-web-apps/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-debugging-modern-web-apps-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-debugging-modern-web-apps-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-debugging-modern-web-apps-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-debugging-modern-web-apps-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-debugging-modern-web-apps-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-bg)" />
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-glow)" />
+      <g transform="translate(315 200) rotate(284)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Debugging Modern Web Apps: A Field Guide</span></h3>
+        <p class="card-feature-desc">A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/picking-frontend-framework-2026/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-picking-frontend-framework-2026-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-picking-frontend-framework-2026-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-picking-frontend-framework-2026-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-picking-frontend-framework-2026-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-picking-frontend-framework-2026-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-bg)" />
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-glow)" />
+      <g transform="translate(287 200) rotate(60)">
+      <circle cx="0" cy="0" r="220" fill="#312e81" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">An Honest Guide to Picking a Frontend Framework in 2026</span></h3>
+        <p class="card-feature-desc">React, Next.js, Svelte, Solid, Astro, and the rest — a practical comparison of where each framework fits, written for people choosing one for a real project.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

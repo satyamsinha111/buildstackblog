@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Debugging Modern Web Apps: A Field Guide — BuildStack</title>
+<meta name="description" content="A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/debugging-modern-web-apps/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/debugging-modern-web-apps/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="Debugging Modern Web Apps: A Field Guide — BuildStack" />
+<meta property="og:description" content="A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Debugging Modern Web Apps: A Field Guide — BuildStack" />
+<meta name="twitter:description" content="A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Debugging Modern Web Apps: A Field Guide","description":"A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.","datePublished":"2026-03-09","dateModified":"2026-03-09","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/debugging-modern-web-apps/"},"keywords":"Debugging, DevTools, Frontend, Backend","articleSection":"Best Practices","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/best-practices/">Best Practices</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #475569, #334155, #0f172a);"></span>Best Practices</p>
+          <h1 class="post-title">Debugging Modern Web Apps: A Field Guide</h1>
+          <p class="post-lede">A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-03-09">March 9, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">6 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,302 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-debugging-modern-web-apps-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-debugging-modern-web-apps-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-debugging-modern-web-apps-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-debugging-modern-web-apps-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-debugging-modern-web-apps-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-bg)" />
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-glow)" />
+      <g transform="translate(315 200) rotate(284)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>The difference between a senior and a junior engineer is rarely raw knowledge. It&#39;s the rate at which they can find the actual cause of a bug. This is a tour of techniques and habits that compound over a career — boring on day one, irreplaceable by year five.</p>
+<p>We&#39;ll start with the mindset, then walk through the toolkit.</p>
+<h2 id="the-debugging-mindset"><a class="heading-anchor" href="#the-debugging-mindset" aria-hidden="true" tabindex="-1"></a>The debugging mindset</h2>
+<p>Most &quot;tough bugs&quot; aren&#39;t tough. They&#39;re poorly investigated. A few habits change that:</p>
+<ul>
+<li><strong>Reproduce the bug before guessing.</strong> If you can&#39;t reproduce it, you can&#39;t fix it. You can only hope.</li>
+<li><strong>Narrow the surface.</strong> Halve the code involved every iteration. Comment out, branch off, simplify the input. Most bugs reveal themselves the moment the search space gets small enough.</li>
+<li><strong>Trust nothing.</strong> &quot;It can&#39;t be the database&quot; is how three days of debugging starts.</li>
+<li><strong>Read the error message twice.</strong> It is shocking how often the answer is in the first sentence of the stack trace.</li>
+</ul>
+<p>When in doubt, slow down. The fastest way through a tough bug is to ask better questions, not type faster.</p>
+<h2 id="browser-devtools-beyond-the-basics"><a class="heading-anchor" href="#browser-devtools-beyond-the-basics" aria-hidden="true" tabindex="-1"></a>Browser DevTools, beyond the basics</h2>
+<p>Most engineers use 5% of what DevTools can do. Here are the high-leverage parts:</p>
+<h3 id="the-console-is-for-evidence-not-output"><a class="heading-anchor" href="#the-console-is-for-evidence-not-output" aria-hidden="true" tabindex="-1"></a>The Console is for evidence, not output</h3>
+<p>Stop using <code>console.log</code> like a print statement. A few habits make a huge difference:</p>
+<ul>
+<li><code>console.log({ user, posts })</code> instead of <code>console.log(user, posts)</code>. The object literal preserves variable names, making the output dramatically easier to read.</li>
+<li><code>console.table(items)</code> for arrays of objects. It gives you a sortable table.</li>
+<li><code>console.trace()</code> when you need to know how you got here.</li>
+<li><code>console.group()</code> / <code>console.groupEnd()</code> to keep related logs together.</li>
+<li><code>debug()</code> (not <code>console.debug</code>) to break inside a specific function.</li>
+</ul>
+<p>And when you&#39;re really stuck, conditional breakpoints in the Sources panel. Right-click any line number, &quot;Add conditional breakpoint.&quot; It only pauses when your condition is true. This single feature saves hours.</p>
+<h3 id="the-network-panel-is-your-second-brain"><a class="heading-anchor" href="#the-network-panel-is-your-second-brain" aria-hidden="true" tabindex="-1"></a>The Network panel is your second brain</h3>
+<p>For any bug that involves data, start in Network. Things to make a habit:</p>
+<ul>
+<li>Filter by <code>Fetch/XHR</code> to see only API calls.</li>
+<li>Sort by Time to find slow endpoints.</li>
+<li>Use the &quot;Initiator&quot; column to find which file actually triggered a request.</li>
+<li>Right-click → &quot;Copy → Copy as fetch&quot; to reproduce a request in the Console.</li>
+<li>Throttle to &quot;Slow 4G&quot; before declaring &quot;everything is fast on my machine.&quot;</li>
+</ul>
+<p>A surprising amount of &quot;the data is wrong&quot; turns out to be &quot;the request is being made from the wrong place&quot; or &quot;the cache is returning stale data.&quot;</p>
+<h3 id="performance-tab-for-what-people-actually-click"><a class="heading-anchor" href="#performance-tab-for-what-people-actually-click" aria-hidden="true" tabindex="-1"></a>Performance tab for what people actually click</h3>
+<p>INP regressions are mostly invisible until you record them. Open the Performance panel, hit Record, click around the part of the app that feels janky, and stop. The tab will show you, in milliseconds, exactly which functions held the main thread. Almost every &quot;the page feels slow&quot; report we&#39;ve debugged has been one or two oversized functions, easily found this way.</p>
+<h2 id="source-maps-that-actually-work"><a class="heading-anchor" href="#source-maps-that-actually-work" aria-hidden="true" tabindex="-1"></a>Source maps that actually work</h2>
+<p>In production, your code is minified. Without working source maps, every stack trace is <code>a.js:1</code>. With them, you can debug production builds as if they were local code. Things that go wrong:</p>
+<ul>
+<li>Source maps not uploaded to your error tracker.</li>
+<li>Source maps publicly served on the CDN (security risk for some teams) or not served at all (debug pain).</li>
+<li>Stale source maps from a previous deploy.</li>
+</ul>
+<p>The simplest fix: upload source maps to Sentry (or your equivalent) on every deploy and don&#39;t serve them publicly. Treat the upload as a required deploy step, not a nice-to-have.</p>
+<h2 id="structured-logs-in-production"><a class="heading-anchor" href="#structured-logs-in-production" aria-hidden="true" tabindex="-1"></a>Structured logs in production</h2>
+<p><code>console.log</code> is a development tool. In production, you need logs you can search, filter, and correlate.</p>
+<p>Two changes go a long way:</p>
+<ul>
+<li><strong>JSON logs</strong>: every log line is a JSON object with fields like <code>level</code>, <code>message</code>, <code>userId</code>, <code>requestId</code>. Your log aggregator can index those fields.</li>
+<li><strong>A request ID on every log line</strong>, propagated through the request from edge to database. When you investigate &quot;the request that broke,&quot; every relevant log shows up under the same ID.</li>
+</ul>
+<p>If your production debugging strategy is &quot;grep through cloud logs and hope,&quot; you&#39;re one bad incident away from realizing this matters.</p>
+<h2 id="reproducing-customer-bugs"><a class="heading-anchor" href="#reproducing-customer-bugs" aria-hidden="true" tabindex="-1"></a>Reproducing customer bugs</h2>
+<p>The hardest bugs are the ones one customer reports and nobody on the team has seen. A workflow that helps:</p>
+<ol>
+<li><strong>Get the request ID</strong> from your error tracker or support ticket.</li>
+<li><strong>Find every log line</strong> with that ID. Trace what happened.</li>
+<li><strong>Look at session replay</strong> if you have it (LogRocket, Sentry Replay). It&#39;s a different debugging modality but can save hours.</li>
+<li><strong>Reproduce locally</strong> using the actual user&#39;s data shape, not made-up data. Surprisingly often, the bug only happens for a specific account.</li>
+</ol>
+<p>A tool that makes this much easier is impersonation: a way for engineers to log in <em>as</em> a user account in production for debugging. Build it carefully — audit every impersonation, never store credentials, and treat it like the privileged operation it is — but it pays for itself fast.</p>
+<h2 id="backend-debugging-without-panic"><a class="heading-anchor" href="#backend-debugging-without-panic" aria-hidden="true" tabindex="-1"></a>Backend debugging without panic</h2>
+<p>When a production endpoint is misbehaving, three things usually save the day:</p>
+<ul>
+<li><strong>A clear error message in the logs.</strong> If your error says &quot;something went wrong,&quot; go fix that first.</li>
+<li><strong>A trace.</strong> OpenTelemetry across your services lets you see exactly which call took 4 seconds. Without it, you&#39;re guessing.</li>
+<li><strong>A way to drop into the running process.</strong> In Node.js, this is <code>--inspect</code> and Chrome DevTools. In containerized environments, it&#39;s whatever you&#39;ve set up — but you should set up something.</li>
+</ul>
+<p>For database issues, <code>EXPLAIN ANALYZE</code> is the single most useful command in any debugger&#39;s vocabulary. The query plan is the truth; everything else is theory.</p>
+<h2 id="knowing-when-to-stop"><a class="heading-anchor" href="#knowing-when-to-stop" aria-hidden="true" tabindex="-1"></a>Knowing when to stop</h2>
+<p>A few signs you should step away and come back:</p>
+<ul>
+<li>You&#39;ve been at it for over two hours without progress.</li>
+<li>You&#39;re guessing instead of testing hypotheses.</li>
+<li>The bug seems to &quot;move&quot; every time you look at it.</li>
+<li>Your reproductions are inconsistent.</li>
+</ul>
+<p>The fastest way through these is <em>not</em> the next attempt. It&#39;s a walk, a sandwich, and a fresh look. Engineers who push through end up shipping fixes that paper over the real problem. Engineers who pause and think tend to find the bug in fifteen minutes after lunch.</p>
+<h2 id="a-small-debugging-checklist"><a class="heading-anchor" href="#a-small-debugging-checklist" aria-hidden="true" tabindex="-1"></a>A small debugging checklist</h2>
+<p>When you&#39;re stuck, run through these in order:</p>
+<ol>
+<li><strong>Have I actually reproduced the bug, or just heard about it?</strong></li>
+<li><strong>Is my code on the latest version of the branch I think it is?</strong></li>
+<li><strong>Are my caches clean? (Hard reload, clear DB cache, restart dev server.)</strong></li>
+<li><strong>Is the error message telling me literally what&#39;s wrong?</strong></li>
+<li><strong>Have I read the network tab for the relevant request?</strong></li>
+<li><strong>Have I checked logs around the time of the failure?</strong></li>
+<li><strong>Have I tried explaining the bug out loud to a teammate, or to a duck?</strong></li>
+</ol>
+<p>Number seven sounds silly. It works. The act of articulating the problem in plain English forces you to confront the assumptions you&#39;ve been making.</p>
+<h2 id="the-unglamorous-truth"><a class="heading-anchor" href="#the-unglamorous-truth" aria-hidden="true" tabindex="-1"></a>The unglamorous truth</h2>
+<p>Most production bugs are caused by:</p>
+<ul>
+<li>A type that wasn&#39;t quite what the developer thought (<code>null</code> instead of <code>undefined</code>, <code>string</code> instead of <code>number</code>).</li>
+<li>A timezone or locale issue.</li>
+<li>A race condition between two requests.</li>
+<li>A cache returning data that&#39;s older than the developer expected.</li>
+<li>An environment variable that&#39;s set differently in production than in development.</li>
+</ul>
+<p>That&#39;s roughly 80% of the bug landscape. If you internalize that list, you&#39;ll start <em>suspecting</em> the right things first, and your debugging will get faster on its own.</p>
+<p>Debugging isn&#39;t about being clever. It&#39;s about being methodical when everyone else is panicking. Build the habits, build the tooling, and the bugs become much smaller adversaries than they look.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/debugging/">Debugging</a><a class="chip" href="/tag/devtools/">DevTools</a><a class="chip" href="/tag/frontend/">Frontend</a><a class="chip" href="/tag/backend/">Backend</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published March 9, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=Debugging%20Modern%20Web%20Apps%3A%20A%20Field%20Guide%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdebugging-modern-web-apps%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdebugging-modern-web-apps%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdebugging-modern-web-apps%2F&amp;t=Debugging%20Modern%20Web%20Apps%3A%20A%20Field%20Guide" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#the-debugging-mindset">The debugging mindset</a></li><li class="toc-l2"><a href="#browser-devtools-beyond-the-basics">Browser DevTools, beyond the basics</a></li><li class="toc-l3"><a href="#the-console-is-for-evidence-not-output">The Console is for evidence, not output</a></li><li class="toc-l3"><a href="#the-network-panel-is-your-second-brain">The Network panel is your second brain</a></li><li class="toc-l3"><a href="#performance-tab-for-what-people-actually-click">Performance tab for what people actually click</a></li><li class="toc-l2"><a href="#source-maps-that-actually-work">Source maps that actually work</a></li><li class="toc-l2"><a href="#structured-logs-in-production">Structured logs in production</a></li><li class="toc-l2"><a href="#reproducing-customer-bugs">Reproducing customer bugs</a></li><li class="toc-l2"><a href="#backend-debugging-without-panic">Backend debugging without panic</a></li><li class="toc-l2"><a href="#knowing-when-to-stop">Knowing when to stop</a></li><li class="toc-l2"><a href="#a-small-debugging-checklist">A small debugging checklist</a></li><li class="toc-l2"><a href="#the-unglamorous-truth">The unglamorous truth</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/database-schema-design/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-database-schema-design-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-database-schema-design-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-database-schema-design-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-database-schema-design-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-database-schema-design-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-bg)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-glow)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-dots)" />
+    <g transform="translate(288 200) rotate(269)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Designing a Database Schema You Won&#39;t Regret in Six Months</span></h3>
+        <p class="card-feature-desc">Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/monolith-vs-microservices/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-monolith-vs-microservices-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-monolith-vs-microservices-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-monolith-vs-microservices-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-monolith-vs-microservices-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-monolith-vs-microservices-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-monolith-vs-microservices-bg)" />
+      <rect width="600" height="400" fill="url(#cover-monolith-vs-microservices-glow)" />
+      <g transform="translate(305 200) rotate(205)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-monolith-vs-microservices-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Monolith vs Microservices: When to Choose What</span></h3>
+        <p class="card-feature-desc">An honest look at the architectural debate that won&#39;t go away — when a monolith is the right call, when microservices earn their complexity, and the modular middle ground most teams should start with.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/accessible-web-apps-practical-guide/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-accessible-web-apps-practical-guide-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-accessible-web-apps-practical-guide-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-accessible-web-apps-practical-guide-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-accessible-web-apps-practical-guide-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-accessible-web-apps-practical-guide-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-accessible-web-apps-practical-guide-bg)" />
+      <rect width="600" height="400" fill="url(#cover-accessible-web-apps-practical-guide-glow)" />
+      <rect width="600" height="400" fill="url(#cover-accessible-web-apps-practical-guide-grid)" />
+    <g transform="translate(303 200) rotate(324)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-accessible-web-apps-practical-guide-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Building Accessible Web Apps: A Practical Guide</span></h3>
+        <p class="card-feature-desc">Accessibility isn&#39;t checklist work — it&#39;s product quality. A working developer&#39;s guide to the WCAG basics, the tools that catch most issues, and the patterns that hold up.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

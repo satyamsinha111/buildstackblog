@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraphQL vs REST: A Practical Comparison — BuildStack</title>
+<meta name="description" content="Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/graphql-vs-rest-comparison/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/graphql-vs-rest-comparison/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="GraphQL vs REST: A Practical Comparison — BuildStack" />
+<meta property="og:description" content="Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="GraphQL vs REST: A Practical Comparison — BuildStack" />
+<meta name="twitter:description" content="Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"GraphQL vs REST: A Practical Comparison","description":"Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production.","datePublished":"2026-03-17","dateModified":"2026-03-17","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/graphql-vs-rest-comparison/"},"keywords":"GraphQL, REST, API, Architecture","articleSection":"Developer Guides","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/developer-guides/">Developer Guides</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #10b981, #14b8a6, #0891b2);"></span>Developer Guides</p>
+          <h1 class="post-title">GraphQL vs REST: A Practical Comparison</h1>
+          <p class="post-lede">Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-03-17">March 17, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,176 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-graphql-vs-rest-comparison-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-graphql-vs-rest-comparison-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-graphql-vs-rest-comparison-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-graphql-vs-rest-comparison-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-graphql-vs-rest-comparison-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-bg)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-glow)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-grid)" />
+    <g transform="translate(291 200) rotate(189)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>Every couple of years, someone declares GraphQL the future of APIs. Every couple of years, REST refuses to die. Both are still going strong in 2026 because they solve genuinely different problems. This post walks through how to choose between them — not as an ideological question, but as a concrete one based on the kind of clients, data, and team you have.</p>
+<h2 id="the-30-second-summary"><a class="heading-anchor" href="#the-30-second-summary" aria-hidden="true" tabindex="-1"></a>The 30-second summary</h2>
+<p>REST is a set of conventions for using HTTP. You define endpoints, each one returning a fixed shape of data. The wire format is HTTP and JSON.</p>
+<p>GraphQL is a query language. You define a schema (types, fields, relationships), and clients send queries that ask for exactly what they want. There&#39;s typically a single endpoint that accepts arbitrary queries.</p>
+<p>Neither is &quot;newer&quot; or &quot;more modern.&quot; They&#39;re different tools for different jobs.</p>
+<h2 id="where-rest-shines"><a class="heading-anchor" href="#where-rest-shines" aria-hidden="true" tabindex="-1"></a>Where REST shines</h2>
+<p>REST is the right answer when:</p>
+<ul>
+<li><strong>Your data shape is stable.</strong> A <code>/posts/123</code> endpoint returning a post is fine forever.</li>
+<li><strong>Caching matters.</strong> HTTP caching (CDNs, browser cache, <code>ETag</code>, <code>Cache-Control</code>) works out of the box for REST. With GraphQL, you generally have to build it yourself.</li>
+<li><strong>Your clients are heterogeneous.</strong> Server-to-server APIs, CLI tools, partners with old HTTP libraries — all of them speak REST natively.</li>
+<li><strong>You want a small surface area.</strong> A REST API has a finite, listable set of endpoints. A GraphQL schema with relationships can produce essentially infinite query shapes.</li>
+</ul>
+<p>In small to mid-sized projects, REST is almost always less work to ship and easier to debug.</p>
+<h2 id="where-graphql-earns-its-weight"><a class="heading-anchor" href="#where-graphql-earns-its-weight" aria-hidden="true" tabindex="-1"></a>Where GraphQL earns its weight</h2>
+<p>GraphQL is the right answer when:</p>
+<ul>
+<li><strong>Your client genuinely needs to compose data across many entities</strong> in arbitrary combinations. A mobile app that shows a user&#39;s profile, recent posts, recent followers, and stats in a single screen — without making four round trips and fetching extra fields — is the canonical case.</li>
+<li><strong>You have many different clients with different needs.</strong> Web, iOS, Android, partner integrations all consuming the same API but each wanting a different slice. GraphQL lets each client take what it needs without you maintaining custom endpoints.</li>
+<li><strong>You have a strong product team that iterates quickly on UI.</strong> GraphQL can absorb a lot of UI churn without backend changes.</li>
+<li><strong>You&#39;d benefit from a typed schema as a contract</strong> between teams. The schema is genuinely useful documentation.</li>
+</ul>
+<p>The over/under-fetching argument is real, but it&#39;s not always decisive. If your client needs roughly the same data shape on every screen, REST will do fine.</p>
+<h2 id="where-each-one-struggles"><a class="heading-anchor" href="#where-each-one-struggles" aria-hidden="true" tabindex="-1"></a>Where each one struggles</h2>
+<p>A fair list of pain points for both:</p>
+<h3 id="rest-struggles-with"><a class="heading-anchor" href="#rest-struggles-with" aria-hidden="true" tabindex="-1"></a>REST struggles with</h3>
+<ul>
+<li><strong>Over-fetching.</strong> A <code>/users/123</code> endpoint returns more than the client needs because you don&#39;t want one endpoint per UI variation.</li>
+<li><strong>Under-fetching.</strong> Showing a user with their last five posts requires two requests, or a special endpoint that combines them.</li>
+<li><strong>Versioning.</strong> Breaking changes mean either coordination or <code>/v2/</code>. Nobody loves either option.</li>
+</ul>
+<h3 id="graphql-struggles-with"><a class="heading-anchor" href="#graphql-struggles-with" aria-hidden="true" tabindex="-1"></a>GraphQL struggles with</h3>
+<ul>
+<li><strong>Caching.</strong> HTTP caching is much harder when every request hits the same endpoint with a different query body. Solving this requires a layer (Apollo, Relay, urql) and effort.</li>
+<li><strong>Authorization.</strong> Field-level auth across deeply nested queries is genuinely complex. &quot;Can this user see this user&#39;s posts&#39; comments&#39; authors?&quot; gets thorny fast.</li>
+<li><strong>Performance shape.</strong> It&#39;s easy for a client to ask for a query that issues fifty database queries. The classic N+1 problem moves from &quot;happens on a particular endpoint&quot; to &quot;happens anywhere in the schema.&quot;</li>
+<li><strong>Server complexity.</strong> A real GraphQL server isn&#39;t a weekend project. Schema, resolvers, dataloaders, complexity limits, depth limits, persisted queries — there&#39;s a lot.</li>
+</ul>
+<h2 id="a-worked-example"><a class="heading-anchor" href="#a-worked-example" aria-hidden="true" tabindex="-1"></a>A worked example</h2>
+<p>Consider showing a user profile with their three most recent posts and the comment count on each.</p>
+<p>REST might look like:</p>
+<pre><code class="language-http">GET /users/123
+GET /users/123/posts?limit=3
+GET /posts/{id}/comments/count  # for each post
+</code></pre>
+<p>Three round trips, or a custom <code>/users/123/profile</code> endpoint that bundles them. Both options are fine.</p>
+<p>GraphQL might look like:</p>
+<pre><code class="language-graphql">query {
+  user(id: &quot;123&quot;) {
+    name
+    avatarUrl
+    posts(limit: 3) {
+      id
+      title
+      commentCount
+    }
+  }
+}
+</code></pre>
+<p>One round trip, exactly the fields the UI needs, no custom endpoint. This is GraphQL at its best — provided your server can resolve <code>commentCount</code> efficiently for each post (with a dataloader, in this case).</p>
+<h2 id="what-changes-in-production"><a class="heading-anchor" href="#what-changes-in-production" aria-hidden="true" tabindex="-1"></a>What changes in production</h2>
+<p>The hype around GraphQL skips over the part where you have to operate it. Some realities:</p>
+<ul>
+<li><strong>You need persisted queries</strong> in production. Letting clients send arbitrary queries to your server is fine for trusted clients on your team. It&#39;s a security and performance hazard for a public API.</li>
+<li><strong>You need complexity limits.</strong> A <code>query { user { posts { author { posts { author { ... } } } } } }</code> can take down a server. Libraries like graphql-cost-analysis exist for a reason.</li>
+<li><strong>You need schema management discipline.</strong> Schema changes need to be tracked, reviewed, and ideally automated — Apollo Studio, Hasura, or similar tooling helps. Without it, schemas drift and stale fields linger forever.</li>
+</ul>
+<p>REST has its own production realities (idempotency keys, rate limits, retry policies), but they&#39;re more familiar to most teams.</p>
+<h2 id="when-to-use-both"><a class="heading-anchor" href="#when-to-use-both" aria-hidden="true" tabindex="-1"></a>When to use both</h2>
+<p>A surprisingly common pattern in 2026: REST for server-to-server and integrations, GraphQL for the front-end-facing API. It&#39;s not always the wrong answer.</p>
+<p>You can also use REST 95% of the time and add a single GraphQL endpoint for the one screen that genuinely benefits from it. You don&#39;t have to commit to one religion.</p>
+<h2 id="a-decision-framework"><a class="heading-anchor" href="#a-decision-framework" aria-hidden="true" tabindex="-1"></a>A decision framework</h2>
+<p>Run through this honestly:</p>
+<ul>
+<li>Will most of your traffic be a small set of fixed-shape calls? <strong>REST.</strong></li>
+<li>Do you have multiple clients with very different data needs? <strong>GraphQL.</strong></li>
+<li>Is HTTP caching critical to your performance story? <strong>REST.</strong></li>
+<li>Is your front-end product team faster than your backend team? <strong>GraphQL</strong> (often) helps absorb that churn.</li>
+<li>Is your team small and pragmatic, with no GraphQL experience? <strong>REST.</strong></li>
+<li>Are you building a public API for unknown developers? <strong>REST</strong>, almost always.</li>
+</ul>
+<p>Notice that none of these answers say &quot;REST is better&quot; or &quot;GraphQL is better.&quot; They say which one fits your situation.</p>
+<h2 id="what-wed-choose-for-a-new-project-today"><a class="heading-anchor" href="#what-wed-choose-for-a-new-project-today" aria-hidden="true" tabindex="-1"></a>What we&#39;d choose for a new project today</h2>
+<p>If we were starting a new web product in 2026 with one product team and a small backend, we&#39;d build a clean REST API with:</p>
+<ul>
+<li>Cursor-based pagination</li>
+<li>Consistent error shapes</li>
+<li>A documented OpenAPI spec</li>
+<li>Optional response shaping via query parameters where it actually saves a round trip</li>
+</ul>
+<p>We&#39;d consider GraphQL when one of these became true:</p>
+<ul>
+<li>Multiple clients with significantly different data needs</li>
+<li>A persistent UI churn problem that backend changes couldn&#39;t keep up with</li>
+<li>A product team big enough to maintain the schema as a serious artifact</li>
+</ul>
+<p>Both technologies are mature and well-supported. The wrong choice isn&#39;t catastrophic — you&#39;ll ship something fine either way. The right choice is the one whose pain points your team can absorb without bleeding velocity. Be honest about that, and you&#39;ll pick correctly more often than the average tweet thread suggests.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/graphql/">GraphQL</a><a class="chip" href="/tag/rest/">REST</a><a class="chip" href="/tag/api/">API</a><a class="chip" href="/tag/architecture/">Architecture</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published March 17, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=GraphQL%20vs%20REST%3A%20A%20Practical%20Comparison%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fgraphql-vs-rest-comparison%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fgraphql-vs-rest-comparison%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fgraphql-vs-rest-comparison%2F&amp;t=GraphQL%20vs%20REST%3A%20A%20Practical%20Comparison" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#the-30-second-summary">The 30-second summary</a></li><li class="toc-l2"><a href="#where-rest-shines">Where REST shines</a></li><li class="toc-l2"><a href="#where-graphql-earns-its-weight">Where GraphQL earns its weight</a></li><li class="toc-l2"><a href="#where-each-one-struggles">Where each one struggles</a></li><li class="toc-l3"><a href="#rest-struggles-with">REST struggles with</a></li><li class="toc-l3"><a href="#graphql-struggles-with">GraphQL struggles with</a></li><li class="toc-l2"><a href="#a-worked-example">A worked example</a></li><li class="toc-l2"><a href="#what-changes-in-production">What changes in production</a></li><li class="toc-l2"><a href="#when-to-use-both">When to use both</a></li><li class="toc-l2"><a href="#a-decision-framework">A decision framework</a></li><li class="toc-l2"><a href="#what-wed-choose-for-a-new-project-today">What we&#39;d choose for a new project today</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/beginner-guide-to-rest-apis/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-beginner-guide-to-rest-apis-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-beginner-guide-to-rest-apis-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-beginner-guide-to-rest-apis-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-bg)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-glow)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-grid)" />
+    <g transform="translate(303 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(189)" fill="#064e3b" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(219)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">A Practical Beginner&#39;s Guide to REST APIs</span></h3>
+        <p class="card-feature-desc">What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/deploy-fullstack-app-walkthrough/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-deploy-fullstack-app-walkthrough-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-bg)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-glow)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-dots)" />
+    <g transform="translate(285 200) rotate(5)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</span></h3>
+        <p class="card-feature-desc">From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/javascript-async-await-promises/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-javascript-async-await-promises-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-javascript-async-await-promises-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-javascript-async-await-promises-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-javascript-async-await-promises-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-javascript-async-await-promises-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-bg)" />
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-glow)" />
+      <g transform="translate(317 200) rotate(300)">
+      <circle cx="0" cy="0" r="220" fill="#064e3b" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Understanding JavaScript Promises and Async/Await</span></h3>
+        <p class="card-feature-desc">A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

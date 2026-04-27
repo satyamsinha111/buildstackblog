@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tailwind CSS vs CSS-in-JS: How to Actually Choose — BuildStack</title>
+<meta name="description" content="A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/tailwind-vs-css-in-js/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/tailwind-vs-css-in-js/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="Tailwind CSS vs CSS-in-JS: How to Actually Choose — BuildStack" />
+<meta property="og:description" content="A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Tailwind CSS vs CSS-in-JS: How to Actually Choose — BuildStack" />
+<meta name="twitter:description" content="A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Tailwind CSS vs CSS-in-JS: How to Actually Choose","description":"A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team.","datePublished":"2026-03-25","dateModified":"2026-03-25","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/tailwind-vs-css-in-js/"},"keywords":"CSS, Tailwind, Frontend, Architecture","articleSection":"Web Development","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/web-development/">Web Development</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #0ea5e9, #6366f1, #7c3aed);"></span>Web Development</p>
+          <h1 class="post-title">Tailwind CSS vs CSS-in-JS: How to Actually Choose</h1>
+          <p class="post-lede">A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-03-25">March 25, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,122 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-tailwind-vs-css-in-js-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-tailwind-vs-css-in-js-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-tailwind-vs-css-in-js-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-tailwind-vs-css-in-js-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-tailwind-vs-css-in-js-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-bg)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-glow)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-grid)" />
+    <g transform="translate(308 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(229)" fill="#312e81" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(259)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>Few topics generate more bad takes than &quot;Tailwind vs CSS-in-JS.&quot; The argument usually devolves into aesthetic preferences and tweet-length objections. Let&#39;s do better. This is a pragmatic look at the three approaches teams actually choose between in 2026, what they&#39;re good at, and how to pick between them.</p>
+<h2 id="the-contestants"><a class="heading-anchor" href="#the-contestants" aria-hidden="true" tabindex="-1"></a>The contestants</h2>
+<p>We&#39;re really comparing three options:</p>
+<ol>
+<li><strong>Utility-first CSS</strong> (Tailwind) — write classes like <code>flex items-center px-4</code> directly in your markup.</li>
+<li><strong>CSS Modules</strong> — write regular CSS, scoped per file, imported as objects.</li>
+<li><strong>CSS-in-JS</strong> — write styles as JavaScript, generally with a library like Vanilla Extract, Linaria, or styled-components.</li>
+</ol>
+<p>Each one solves a real problem. Each one creates new ones.</p>
+<h2 id="what-everyone-is-actually-arguing-about"><a class="heading-anchor" href="#what-everyone-is-actually-arguing-about" aria-hidden="true" tabindex="-1"></a>What everyone is actually arguing about</h2>
+<p>Strip away the rhetoric and the debate is about three trade-offs:</p>
+<ul>
+<li><strong>Where does style live?</strong> Next to the component, in a separate file, or compiled from JavaScript?</li>
+<li><strong>How dynamic is your styling?</strong> Mostly static design tokens, or values computed at runtime from props?</li>
+<li><strong>What&#39;s your team&#39;s tolerance for build complexity?</strong> Tailwind has its own complexity. So does CSS-in-JS. There&#39;s no zero-cost option.</li>
+</ul>
+<p>Once you frame it that way, the choice usually becomes obvious.</p>
+<h2 id="when-tailwind-wins"><a class="heading-anchor" href="#when-tailwind-wins" aria-hidden="true" tabindex="-1"></a>When Tailwind wins</h2>
+<p>Tailwind is at its best when:</p>
+<ul>
+<li>You have a stable design system you can encode as utility classes.</li>
+<li>Your team has more than one person and you want them to write <em>consistent</em> CSS without effort.</li>
+<li>You care about runtime performance and bundle size.</li>
+<li>You&#39;d rather read markup than jump between files to understand styles.</li>
+</ul>
+<p>The complaint that &quot;Tailwind is just inline styles&quot; misses the point. Inline styles can&#39;t do hover states, media queries, dark mode, or design tokens. Tailwind can. The constraint is the feature: you can&#39;t write <code>padding: 13px;</code> because design systems shouldn&#39;t have 13px paddings.</p>
+<p>Two things Tailwind genuinely makes harder:</p>
+<ul>
+<li><strong>Highly dynamic styles</strong> computed from props. You can do it (<code>cn(...)</code> helpers, <code>clsx</code>, conditional class strings), but it&#39;s never as clean as a CSS-in-JS template.</li>
+<li><strong>Themes that aren&#39;t simple variations.</strong> Tailwind&#39;s theming is good for swapping a color palette. It&#39;s awkward for fundamentally different layouts per theme.</li>
+</ul>
+<h2 id="when-css-modules-win"><a class="heading-anchor" href="#when-css-modules-win" aria-hidden="true" tabindex="-1"></a>When CSS Modules win</h2>
+<p>CSS Modules are the boring choice that often wins on long-running projects.</p>
+<p>They&#39;re at their best when:</p>
+<ul>
+<li>You have a designer or an HTML-first developer on the team who&#39;s fluent in CSS.</li>
+<li>Your styling vocabulary doesn&#39;t fit cleanly into utility classes (animations, complex <code>:nth-child</code> selectors, intricate grid layouts).</li>
+<li>You want zero runtime overhead and a build setup that hasn&#39;t changed in five years.</li>
+</ul>
+<p>The honest downside: nothing prevents inconsistency. Two engineers will inevitably write two different &quot;spacing-medium&quot; classes if you don&#39;t agree on shared variables. CSS Modules need a culture of design tokens to stay clean.</p>
+<p>If you go this route, set up a small file of CSS variables or a SCSS theme module and treat it as the single source of design truth. The discipline beats the tooling here.</p>
+<h2 id="when-css-in-js-wins"><a class="heading-anchor" href="#when-css-in-js-wins" aria-hidden="true" tabindex="-1"></a>When CSS-in-JS wins</h2>
+<p>CSS-in-JS used to be the default for React apps. In 2026, it&#39;s a more specialized choice. It&#39;s at its best when:</p>
+<ul>
+<li>Your styles genuinely depend on props or component state in non-trivial ways.</li>
+<li>You want types on your styles (Vanilla Extract is excellent for this).</li>
+<li>You&#39;re building a library of components that need to be themed by consumers.</li>
+</ul>
+<p>The catch is performance. Runtime CSS-in-JS libraries (styled-components, Emotion in classic mode) have measurable overhead, and they don&#39;t play well with Server Components. Modern CSS-in-JS that compiles at build time (Vanilla Extract, Linaria, Panda CSS) sidesteps that, but at the cost of more build complexity.</p>
+<p>If you&#39;re starting a new project in 2026 and reaching for runtime CSS-in-JS, ask yourself why. Most of the original motivations have been solved by other means.</p>
+<h2 id="the-practical-comparison"><a class="heading-anchor" href="#the-practical-comparison" aria-hidden="true" tabindex="-1"></a>The practical comparison</h2>
+<p>Let&#39;s compare a single component across the three approaches. Tailwind:</p>
+<pre><code class="language-tsx">export function Button({ variant }: { variant: &quot;primary&quot; | &quot;ghost&quot; }) {
+  return (
+    &lt;button
+      className={
+        variant === &quot;primary&quot;
+          ? &quot;rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700&quot;
+          : &quot;rounded-md px-4 py-2 text-blue-600 hover:bg-blue-50&quot;
+      }
+    &gt;
+      Click me
+    &lt;/button&gt;
+  );
+}
+</code></pre>
+<p>CSS Modules:</p>
+<pre><code class="language-tsx">import styles from &quot;./Button.module.css&quot;;
+
+export function Button({ variant }: { variant: &quot;primary&quot; | &quot;ghost&quot; }) {
+  return (
+    &lt;button className={styles[variant]}&gt;Click me&lt;/button&gt;
+  );
+}
+</code></pre>
+<pre><code class="language-css">/* Button.module.css */
+.primary {
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-blue-600);
+  color: white;
+}
+.primary:hover {
+  background: var(--color-blue-700);
+}
+.ghost {
+  /* ... */
+}
+</code></pre>
+<p>CSS-in-JS (Vanilla Extract):</p>
+<pre><code class="language-tsx">import { style } from &quot;@vanilla-extract/css&quot;;
+
+const primary = style({
+  borderRadius: &quot;0.375rem&quot;,
+  padding: &quot;0.5rem 1rem&quot;,
+  background: &quot;var(--color-blue-600)&quot;,
+  color: &quot;white&quot;,
+  &quot;:hover&quot;: { background: &quot;var(--color-blue-700)&quot; },
+});
+</code></pre>
+<p>None of these is dramatically shorter than the others. The difference is where the cost lands:</p>
+<ul>
+<li>Tailwind: cost is in the markup.</li>
+<li>CSS Modules: cost is the round trip between files.</li>
+<li>CSS-in-JS: cost is build complexity.</li>
+</ul>
+<p>Pick the one whose cost bothers you least.</p>
+<h2 id="things-that-dont-matter-as-much-as-you-think"><a class="heading-anchor" href="#things-that-dont-matter-as-much-as-you-think" aria-hidden="true" tabindex="-1"></a>Things that don&#39;t matter as much as you think</h2>
+<p>A few common arguments that usually aren&#39;t load-bearing:</p>
+<ul>
+<li><strong>&quot;My JSX is unreadable with Tailwind.&quot;</strong> Editors can wrap and sort classes. The &quot;wall of text&quot; complaint dissolves with a single Prettier plugin.</li>
+<li><strong>&quot;CSS-in-JS is slow.&quot;</strong> True for runtime libraries, mostly false for compile-time ones. Pick the right kind.</li>
+<li><strong>&quot;I prefer plain CSS.&quot;</strong> That&#39;s fine, but on a four-engineer team your preference doesn&#39;t determine consistency. Tooling does.</li>
+</ul>
+<h2 id="a-reasonable-default-in-2026"><a class="heading-anchor" href="#a-reasonable-default-in-2026" aria-hidden="true" tabindex="-1"></a>A reasonable default in 2026</h2>
+<p>If we were starting a new web app today and didn&#39;t have a strong reason to do otherwise, we&#39;d reach for <strong>Tailwind plus a small set of CSS files</strong> for global styles, animations, and the rare custom layout. That gets us:</p>
+<ul>
+<li>Tailwind for ~95% of styling.</li>
+<li>A <code>globals.css</code> for resets and base styles.</li>
+<li>A few CSS variables for design tokens.</li>
+<li>No runtime CSS-in-JS. Server Components stay simple, bundle stays small.</li>
+</ul>
+<p>If you&#39;re building a component library meant to be themed by consumers, that calculus shifts. Vanilla Extract or Panda CSS becomes more attractive.</p>
+<p>If you have a CSS-fluent team and a long-lived codebase, CSS Modules are still an excellent, low-drama choice.</p>
+<h2 id="how-to-actually-decide"><a class="heading-anchor" href="#how-to-actually-decide" aria-hidden="true" tabindex="-1"></a>How to actually decide</h2>
+<p>Run this short checklist:</p>
+<ul>
+<li>Will the same two or three engineers maintain this for years? CSS Modules are fine.</li>
+<li>Are you a larger team that needs strong consistency by default? Tailwind.</li>
+<li>Are your styles genuinely dynamic in non-trivial ways? Compile-time CSS-in-JS.</li>
+<li>Are you using Server Components? Prefer Tailwind or compile-time CSS-in-JS over runtime libraries.</li>
+</ul>
+<p>There&#39;s no universally right answer. There&#39;s a right answer for your team, your app, and the next two years of your roadmap. Pick the one whose trade-offs you can live with, then commit. Switching styling systems mid-project is the worst outcome of all.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/css/">CSS</a><a class="chip" href="/tag/tailwind/">Tailwind</a><a class="chip" href="/tag/frontend/">Frontend</a><a class="chip" href="/tag/architecture/">Architecture</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published March 25, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=Tailwind%20CSS%20vs%20CSS-in-JS%3A%20How%20to%20Actually%20Choose%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Ftailwind-vs-css-in-js%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Ftailwind-vs-css-in-js%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Ftailwind-vs-css-in-js%2F&amp;t=Tailwind%20CSS%20vs%20CSS-in-JS%3A%20How%20to%20Actually%20Choose" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#the-contestants">The contestants</a></li><li class="toc-l2"><a href="#what-everyone-is-actually-arguing-about">What everyone is actually arguing about</a></li><li class="toc-l2"><a href="#when-tailwind-wins">When Tailwind wins</a></li><li class="toc-l2"><a href="#when-css-modules-win">When CSS Modules win</a></li><li class="toc-l2"><a href="#when-css-in-js-wins">When CSS-in-JS wins</a></li><li class="toc-l2"><a href="#the-practical-comparison">The practical comparison</a></li><li class="toc-l2"><a href="#things-that-dont-matter-as-much-as-you-think">Things that don&#39;t matter as much as you think</a></li><li class="toc-l2"><a href="#a-reasonable-default-in-2026">A reasonable default in 2026</a></li><li class="toc-l2"><a href="#how-to-actually-decide">How to actually decide</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/react-server-components-mastery/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-react-server-components-mastery-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-react-server-components-mastery-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-react-server-components-mastery-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-react-server-components-mastery-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-react-server-components-mastery-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-bg)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-glow)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-dots)" />
+    <g transform="translate(321 200) rotate(91)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Mastering React Server Components in Next.js</span></h3>
+        <p class="card-feature-desc">Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/picking-frontend-framework-2026/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-picking-frontend-framework-2026-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-picking-frontend-framework-2026-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-picking-frontend-framework-2026-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-picking-frontend-framework-2026-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-picking-frontend-framework-2026-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-bg)" />
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-glow)" />
+      <g transform="translate(287 200) rotate(60)">
+      <circle cx="0" cy="0" r="220" fill="#312e81" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">An Honest Guide to Picking a Frontend Framework in 2026</span></h3>
+        <p class="card-feature-desc">React, Next.js, Svelte, Solid, Astro, and the rest — a practical comparison of where each framework fits, written for people choosing one for a real project.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/structuring-large-react-applications/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-structuring-large-react-applications-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-structuring-large-react-applications-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-structuring-large-react-applications-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-structuring-large-react-applications-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-structuring-large-react-applications-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-bg)" />
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-glow)" />
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-grid)" />
+    <g transform="translate(286 200) rotate(308)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Structure a Large React Application Without It Becoming a Maze</span></h3>
+        <p class="card-feature-desc">Folder structures, module boundaries, and team conventions that keep React projects navigable as they grow from one engineer to twenty.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

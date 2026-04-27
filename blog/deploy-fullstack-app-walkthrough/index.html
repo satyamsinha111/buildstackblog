@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to Deploy a Full-Stack App: A No-Nonsense Walkthrough — BuildStack</title>
+<meta name="description" content="From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/deploy-fullstack-app-walkthrough/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/deploy-fullstack-app-walkthrough/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="How to Deploy a Full-Stack App: A No-Nonsense Walkthrough — BuildStack" />
+<meta property="og:description" content="From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to Deploy a Full-Stack App: A No-Nonsense Walkthrough — BuildStack" />
+<meta name="twitter:description" content="From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Deploy a Full-Stack App: A No-Nonsense Walkthrough","description":"From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor's worldview.","datePublished":"2026-04-06","dateModified":"2026-04-06","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/deploy-fullstack-app-walkthrough/"},"keywords":"Deployment, DevOps, Next.js, PostgreSQL","articleSection":"Developer Guides","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/developer-guides/">Developer Guides</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #10b981, #14b8a6, #0891b2);"></span>Developer Guides</p>
+          <h1 class="post-title">How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</h1>
+          <p class="post-lede">From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-04-06">April 6, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,158 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-deploy-fullstack-app-walkthrough-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-bg)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-glow)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-dots)" />
+    <g transform="translate(285 200) rotate(5)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>The first deployment is the hardest. Your app works locally. Then you push it to a server and a hundred small assumptions break at once. This guide walks through deploying a full-stack app — Next.js front end, Node.js API, PostgreSQL database — without leaning so hard on a single platform that you can&#39;t move later.</p>
+<p>We&#39;ll cover three deployment styles in increasing order of control: managed platforms, container-based deploys, and self-managed VPS. Pick the one that matches your patience and your budget.</p>
+<h2 id="what-deploying-actually-involves"><a class="heading-anchor" href="#what-deploying-actually-involves" aria-hidden="true" tabindex="-1"></a>What &quot;deploying&quot; actually involves</h2>
+<p>Before we touch anything, here&#39;s what every deployment has to do, regardless of platform:</p>
+<ul>
+<li>Build the production version of your app.</li>
+<li>Get the build artifacts onto a server somewhere.</li>
+<li>Run the server with environment variables set correctly.</li>
+<li>Connect to a managed database.</li>
+<li>Put a domain in front of it with HTTPS.</li>
+<li>Make sure logs and errors don&#39;t disappear into a void.</li>
+</ul>
+<p>Every &quot;deploy&quot; tool — Vercel, Railway, Fly, raw Docker on a VPS — is just a different opinion about how to handle those steps.</p>
+<h2 id="step-0-get-your-app-deploy-ready"><a class="heading-anchor" href="#step-0-get-your-app-deploy-ready" aria-hidden="true" tabindex="-1"></a>Step 0: get your app deploy-ready</h2>
+<p>Before deploying anything, do these three things on your laptop:</p>
+<ol>
+<li><strong>Run the production build locally</strong>: <code>npm run build &amp;&amp; npm run start</code>. If it doesn&#39;t work here, it won&#39;t work anywhere.</li>
+<li><strong>Move all secrets to environment variables.</strong> Search your codebase for hardcoded database URLs, API keys, JWT secrets, and <code>localhost</code>. Remove them.</li>
+<li><strong>Make sure your database migrations are reproducible.</strong> <code>npx prisma migrate deploy</code> (or your equivalent) should bring a fresh database to the right state without manual SQL.</li>
+</ol>
+<p>Skip these steps and you&#39;ll spend the next week debugging things that have nothing to do with the platform.</p>
+<h2 id="option-1-managed-platform-the-fast-path"><a class="heading-anchor" href="#option-1-managed-platform-the-fast-path" aria-hidden="true" tabindex="-1"></a>Option 1: managed platform (the fast path)</h2>
+<p>If you want to be in production in an afternoon, use a managed platform like Vercel for the frontend and a managed Postgres provider (Neon, Supabase, or your cloud&#39;s hosted Postgres) for the database.</p>
+<p>The flow:</p>
+<ol>
+<li>Push your code to GitHub.</li>
+<li>Connect the repo to Vercel.</li>
+<li>Set environment variables in the dashboard.</li>
+<li>Hit &quot;deploy.&quot;</li>
+</ol>
+<p>What you give up:</p>
+<ul>
+<li><strong>Long-running servers.</strong> Most managed platforms run your code as serverless functions. If you need WebSockets, persistent connections, or background jobs longer than ~5 minutes, you&#39;ll need a different approach.</li>
+<li><strong>Vendor independence.</strong> Migrating off later is annoying — possible, but annoying.</li>
+</ul>
+<p>What you gain:</p>
+<ul>
+<li>Zero-config CI/CD on every push.</li>
+<li>Preview environments per pull request, which is genuinely transformative for review.</li>
+<li>TLS, edge caching, and a reasonable CDN by default.</li>
+</ul>
+<p>For 90% of small-to-mid-sized projects, this is the right answer. The other 10% need more.</p>
+<h2 id="option-2-containers-the-portable-path"><a class="heading-anchor" href="#option-2-containers-the-portable-path" aria-hidden="true" tabindex="-1"></a>Option 2: containers (the portable path)</h2>
+<p>If you might leave your platform later, build a Docker image and deploy it. This is the sweet spot of control and portability in 2026.</p>
+<p>A reasonable production Dockerfile for a Next.js app:</p>
+<pre><code class="language-dockerfile">FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/node_modules ./node_modules
+EXPOSE 3000
+CMD [&quot;npm&quot;, &quot;start&quot;]
+</code></pre>
+<p>A few things worth knowing:</p>
+<ul>
+<li>Use Alpine images for smaller builds, but be aware of native-module quirks (e.g. <code>sharp</code> for image processing).</li>
+<li>Use multi-stage builds. Your final image should not contain dev dependencies.</li>
+<li>Pass secrets via environment variables, not by baking them into the image.</li>
+</ul>
+<p>You can run this image on Fly.io, Render, Railway, AWS ECS, Google Cloud Run, or any Kubernetes cluster. The image doesn&#39;t care.</p>
+<p>For the database, use a managed Postgres. There is almost no good reason to self-host the database for a small team in 2026.</p>
+<h2 id="option-3-self-managed-vps-the-control-path"><a class="heading-anchor" href="#option-3-self-managed-vps-the-control-path" aria-hidden="true" tabindex="-1"></a>Option 3: self-managed VPS (the control path)</h2>
+<p>A $5/month VPS from DigitalOcean, Hetzner, or Vultr is still a perfectly good deployment target if you want full control and don&#39;t mind a bit of plumbing. Here&#39;s the minimum:</p>
+<ol>
+<li>Provision an Ubuntu server.</li>
+<li>Set up SSH key auth and disable password auth.</li>
+<li>Install Node.js, Nginx, and PostgreSQL.</li>
+<li>Use <code>pm2</code> or systemd to run the app and restart it on crash.</li>
+<li>Configure Nginx as a reverse proxy in front of port 3000.</li>
+<li>Use Let&#39;s Encrypt (<code>certbot</code>) for free TLS.</li>
+<li>Set up a basic firewall (<code>ufw</code>) and unattended security updates.</li>
+</ol>
+<p>You&#39;ll learn a lot from doing this once. After the first time, you can decide whether you want to do it again.</p>
+<p>A few things people forget on first deployment:</p>
+<ul>
+<li><strong>Backups.</strong> Set up automated database backups before you have data worth losing.</li>
+<li><strong>Log rotation.</strong> Without it, your disk fills up at 3 a.m.</li>
+<li><strong>Time sync.</strong> <code>chrony</code> or <code>systemd-timesyncd</code>. JWT validation breaks subtly when clocks drift.</li>
+</ul>
+<h2 id="environment-variables-the-most-common-foot-gun"><a class="heading-anchor" href="#environment-variables-the-most-common-foot-gun" aria-hidden="true" tabindex="-1"></a>Environment variables: the most common foot-gun</h2>
+<p>In every deployment style, environment variables cause more headaches than the actual application code. A few habits that help:</p>
+<ul>
+<li>Keep a <code>.env.example</code> checked into git, with all keys and dummy values, so anyone can see what&#39;s required.</li>
+<li>Validate them at startup. If <code>DATABASE_URL</code> is missing, crash loudly. Don&#39;t let the app start in a broken state.</li>
+<li>Never put secrets in your build output. In Next.js, anything prefixed with <code>NEXT_PUBLIC_</code> is exposed to the browser. Treat that prefix as a public commitment.</li>
+</ul>
+<h2 id="database-migrations-on-deploy"><a class="heading-anchor" href="#database-migrations-on-deploy" aria-hidden="true" tabindex="-1"></a>Database migrations on deploy</h2>
+<p>The cleanest pattern is to run migrations as a step in your deployment pipeline, <em>before</em> the new code starts serving traffic:</p>
+<pre><code class="language-bash">npx prisma migrate deploy
+npm run start
+</code></pre>
+<p>For zero-downtime migrations, you also need to write your migrations to be backward-compatible with the previous version of the code:</p>
+<ol>
+<li>Add new columns as nullable.</li>
+<li>Backfill data in a separate migration.</li>
+<li>Make the columns non-nullable in a <em>third</em> migration, after the old code is fully retired.</li>
+</ol>
+<p>This sounds like extra work. It is. It&#39;s also the only way to deploy without scheduling downtime.</p>
+<h2 id="observability-from-day-one"><a class="heading-anchor" href="#observability-from-day-one" aria-hidden="true" tabindex="-1"></a>Observability from day one</h2>
+<p>Before traffic shows up, set up:</p>
+<ul>
+<li><strong>Error tracking</strong> — Sentry, Bugsnag, or similar.</li>
+<li><strong>Uptime monitoring</strong> — even a free pinging service is fine.</li>
+<li><strong>Structured logging</strong> — JSON logs, with timestamps and request IDs.</li>
+</ul>
+<p>You don&#39;t need a fancy dashboard on day one. You do need a way to know when something is broken without a user emailing you.</p>
+<h2 id="a-reasonable-first-deploy-checklist"><a class="heading-anchor" href="#a-reasonable-first-deploy-checklist" aria-hidden="true" tabindex="-1"></a>A reasonable first-deploy checklist</h2>
+<p>Print this and tape it next to your monitor:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Production build runs locally.</li>
+<li><input disabled="" type="checkbox"> All secrets are in environment variables.</li>
+<li><input disabled="" type="checkbox"> <code>.env.example</code> is up to date.</li>
+<li><input disabled="" type="checkbox"> Database migrations are reproducible.</li>
+<li><input disabled="" type="checkbox"> HTTPS is enabled.</li>
+<li><input disabled="" type="checkbox"> Errors get reported somewhere you&#39;ll see them.</li>
+<li><input disabled="" type="checkbox"> You know how to roll back to the previous version.</li>
+</ul>
+<p>If you can check all of those boxes, you&#39;re in better shape than most production apps. Ship it.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/deployment/">Deployment</a><a class="chip" href="/tag/devops/">DevOps</a><a class="chip" href="/tag/next.js/">Next.js</a><a class="chip" href="/tag/postgresql/">PostgreSQL</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published April 6, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=How%20to%20Deploy%20a%20Full-Stack%20App%3A%20A%20No-Nonsense%20Walkthrough%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdeploy-fullstack-app-walkthrough%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdeploy-fullstack-app-walkthrough%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fdeploy-fullstack-app-walkthrough%2F&amp;t=How%20to%20Deploy%20a%20Full-Stack%20App%3A%20A%20No-Nonsense%20Walkthrough" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#what-deploying-actually-involves">What &quot;deploying&quot; actually involves</a></li><li class="toc-l2"><a href="#step-0-get-your-app-deploy-ready">Step 0: get your app deploy-ready</a></li><li class="toc-l2"><a href="#option-1-managed-platform-the-fast-path">Option 1: managed platform (the fast path)</a></li><li class="toc-l2"><a href="#option-2-containers-the-portable-path">Option 2: containers (the portable path)</a></li><li class="toc-l2"><a href="#option-3-self-managed-vps-the-control-path">Option 3: self-managed VPS (the control path)</a></li><li class="toc-l2"><a href="#environment-variables-the-most-common-foot-gun">Environment variables: the most common foot-gun</a></li><li class="toc-l2"><a href="#database-migrations-on-deploy">Database migrations on deploy</a></li><li class="toc-l2"><a href="#observability-from-day-one">Observability from day one</a></li><li class="toc-l2"><a href="#a-reasonable-first-deploy-checklist">A reasonable first-deploy checklist</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/beginner-guide-to-rest-apis/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-beginner-guide-to-rest-apis-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-beginner-guide-to-rest-apis-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-beginner-guide-to-rest-apis-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-bg)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-glow)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-grid)" />
+    <g transform="translate(303 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(189)" fill="#064e3b" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(219)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">A Practical Beginner&#39;s Guide to REST APIs</span></h3>
+        <p class="card-feature-desc">What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/graphql-vs-rest-comparison/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-graphql-vs-rest-comparison-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-graphql-vs-rest-comparison-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-graphql-vs-rest-comparison-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-graphql-vs-rest-comparison-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-graphql-vs-rest-comparison-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-bg)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-glow)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-grid)" />
+    <g transform="translate(291 200) rotate(189)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">GraphQL vs REST: A Practical Comparison</span></h3>
+        <p class="card-feature-desc">Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/javascript-async-await-promises/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-javascript-async-await-promises-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-javascript-async-await-promises-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-javascript-async-await-promises-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-javascript-async-await-promises-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-javascript-async-await-promises-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-bg)" />
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-glow)" />
+      <g transform="translate(317 200) rotate(300)">
+      <circle cx="0" cy="0" r="220" fill="#064e3b" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Understanding JavaScript Promises and Async/Await</span></h3>
+        <p class="card-feature-desc">A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

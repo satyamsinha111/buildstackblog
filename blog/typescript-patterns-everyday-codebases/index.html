@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TypeScript Patterns That Make Your Codebase Easier to Live With — BuildStack</title>
+<meta name="description" content="Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/typescript-patterns-everyday-codebases/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/typescript-patterns-everyday-codebases/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="TypeScript Patterns That Make Your Codebase Easier to Live With — BuildStack" />
+<meta property="og:description" content="Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="TypeScript Patterns That Make Your Codebase Easier to Live With — BuildStack" />
+<meta name="twitter:description" content="Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"TypeScript Patterns That Make Your Codebase Easier to Live With","description":"Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler.","datePublished":"2026-03-29","dateModified":"2026-03-29","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/typescript-patterns-everyday-codebases/"},"keywords":"TypeScript, Patterns, Code Quality","articleSection":"Best Practices","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/best-practices/">Best Practices</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #475569, #334155, #0f172a);"></span>Best Practices</p>
+          <h1 class="post-title">TypeScript Patterns That Make Your Codebase Easier to Live With</h1>
+          <p class="post-lede">Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-03-29">March 29, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,204 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-typescript-patterns-everyday-codebases-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-typescript-patterns-everyday-codebases-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-typescript-patterns-everyday-codebases-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-typescript-patterns-everyday-codebases-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-bg)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-glow)" />
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-grid)" />
+    <g transform="translate(302 200) rotate(318)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-typescript-patterns-everyday-codebases-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>TypeScript has won. Almost every serious JavaScript codebase uses it now. But there&#39;s a wide gap between &quot;we use TypeScript&quot; and &quot;TypeScript is actually helping us.&quot; This post is a tour of the patterns that, in our experience, separate the two.</p>
+<p>None of these are tricks. They&#39;re tools. Used well, they prevent entire classes of bugs from being possible to write.</p>
+<h2 id="1-make-impossible-states-impossible"><a class="heading-anchor" href="#1-make-impossible-states-impossible" aria-hidden="true" tabindex="-1"></a>1. Make impossible states impossible</h2>
+<p>The single most valuable thing TypeScript gives you is the ability to encode invariants in the type system. When you find yourself writing comments like &quot;if <code>loading</code> is true, <code>data</code> will be undefined,&quot; that&#39;s a hint to use a discriminated union instead.</p>
+<p>The lazy version:</p>
+<pre><code class="language-ts">type State = {
+  loading: boolean;
+  error?: Error;
+  data?: User;
+};
+</code></pre>
+<p>Every consumer has to remember the implicit rules. Every consumer eventually forgets.</p>
+<p>The version that helps:</p>
+<pre><code class="language-ts">type State =
+  | { status: &quot;idle&quot; }
+  | { status: &quot;loading&quot; }
+  | { status: &quot;error&quot;; error: Error }
+  | { status: &quot;success&quot;; data: User };
+</code></pre>
+<p>Now the compiler enforces the rules. Inside <code>if (state.status === &quot;success&quot;)</code>, <code>state.data</code> is typed as <code>User</code>. Outside it, accessing <code>state.data</code> is a type error.</p>
+<p>This pattern shows up everywhere: form states, async results, payment statuses, anything with a clear set of mutually exclusive cases. Reach for it before you reach for optional fields.</p>
+<h2 id="2-use-branded-types-for-values-that-look-identical-but-arent"><a class="heading-anchor" href="#2-use-branded-types-for-values-that-look-identical-but-arent" aria-hidden="true" tabindex="-1"></a>2. Use branded types for values that look identical but aren&#39;t</h2>
+<p><code>UserId</code> and <code>OrderId</code> are both <code>string</code> to TypeScript. That means you can pass an order ID where a user ID is expected and the compiler will not complain. This is how production bugs are born.</p>
+<p>A &quot;branded&quot; type fixes it:</p>
+<pre><code class="language-ts">type Brand&lt;T, B&gt; = T &amp; { readonly __brand: B };
+
+type UserId = Brand&lt;string, &quot;UserId&quot;&gt;;
+type OrderId = Brand&lt;string, &quot;OrderId&quot;&gt;;
+
+function getUser(id: UserId) {
+  /* ... */
+}
+
+const orderId = &quot;abc&quot; as OrderId;
+getUser(orderId); // Type error
+</code></pre>
+<p>The runtime cost is zero — the brand exists only in the type system. Use it for IDs, currency amounts, sanitized HTML, validated emails. Anything where mixing two values would cause a bug.</p>
+<h2 id="3-as-const-is-your-best-friend"><a class="heading-anchor" href="#3-as-const-is-your-best-friend" aria-hidden="true" tabindex="-1"></a>3. <code>as const</code> is your best friend</h2>
+<p>When you write a literal in TypeScript, the type defaults to its widened version: <code>&quot;published&quot;</code> becomes <code>string</code>, <code>[1, 2, 3]</code> becomes <code>number[]</code>. That&#39;s usually wrong.</p>
+<p><code>as const</code> keeps the literal type:</p>
+<pre><code class="language-ts">const ROLES = [&quot;admin&quot;, &quot;editor&quot;, &quot;viewer&quot;] as const;
+type Role = typeof ROLES[number]; // &quot;admin&quot; | &quot;editor&quot; | &quot;viewer&quot;
+</code></pre>
+<p>Now <code>Role</code> is exactly the three strings, and you have a runtime array to iterate over for things like form options. One source of truth, two uses.</p>
+<h2 id="4-stop-using-any-use-unknown-instead"><a class="heading-anchor" href="#4-stop-using-any-use-unknown-instead" aria-hidden="true" tabindex="-1"></a>4. Stop using <code>any</code>. Use <code>unknown</code> instead.</h2>
+<p><code>any</code> turns off type checking for the value it touches and everything that comes from it. <code>unknown</code> says &quot;we don&#39;t know what this is yet&quot; but forces you to narrow it before use.</p>
+<pre><code class="language-ts">function parseConfig(input: unknown) {
+  if (typeof input !== &quot;object&quot; || input === null) {
+    throw new Error(&quot;invalid config&quot;);
+  }
+  // input is now `object`. Narrow further as needed.
+}
+</code></pre>
+<p>The pattern that almost always works:</p>
+<ul>
+<li>Internal API: never use <code>any</code>.</li>
+<li>Boundaries (network, file system, third-party libs): receive as <code>unknown</code>, validate at the edge, hand back a typed value to the rest of the codebase.</li>
+</ul>
+<p>Validation libraries like Zod or Valibot make this trivial. Once you do it, the rest of the codebase stays clean.</p>
+<h2 id="5-generic-functions-but-only-when-they-earn-their-keep"><a class="heading-anchor" href="#5-generic-functions-but-only-when-they-earn-their-keep" aria-hidden="true" tabindex="-1"></a>5. Generic functions, but only when they earn their keep</h2>
+<p>Generics are a power tool, and they&#39;re easy to misuse. A generic that has only one type parameter and only one call site is just a fancy wrapper. A generic that lets you reuse the same function across many types is gold.</p>
+<p>A great use case:</p>
+<pre><code class="language-ts">async function api&lt;T&gt;(path: string): Promise&lt;T&gt; {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json() as Promise&lt;T&gt;;
+}
+
+const user = await api&lt;User&gt;(&quot;/users/me&quot;);
+</code></pre>
+<p>A bad use case:</p>
+<pre><code class="language-ts">function logAndReturn&lt;T&gt;(value: T): T {
+  console.log(value);
+  return value;
+}
+</code></pre>
+<p>The generic adds nothing here. <code>function logAndReturn&lt;T&gt;(value: T): T</code> is the same as accepting any input. If you can&#39;t write a sentence about <em>why</em> the function is generic, it shouldn&#39;t be.</p>
+<h2 id="6-prefer-interface-for-public-shapes-type-for-everything-else"><a class="heading-anchor" href="#6-prefer-interface-for-public-shapes-type-for-everything-else" aria-hidden="true" tabindex="-1"></a>6. Prefer <code>interface</code> for public shapes, <code>type</code> for everything else</h2>
+<p>This one is mildly contentious, but here&#39;s what we&#39;ve settled on:</p>
+<ul>
+<li><code>interface</code> for things you might extend or that are part of a public API. They support declaration merging, which is occasionally useful.</li>
+<li><code>type</code> for everything else, especially unions, intersections, and computed types.</li>
+</ul>
+<p>The mistake to avoid is mixing them randomly throughout the codebase. Pick a rule and follow it.</p>
+<h2 id="7-narrow-with-type-predicates-instead-of-casting"><a class="heading-anchor" href="#7-narrow-with-type-predicates-instead-of-casting" aria-hidden="true" tabindex="-1"></a>7. Narrow with type predicates instead of casting</h2>
+<p>When you need to tell TypeScript &quot;trust me, this is an X,&quot; reach for a type predicate before reaching for <code>as</code>.</p>
+<pre><code class="language-ts">function isUser(value: unknown): value is User {
+  return (
+    typeof value === &quot;object&quot; &amp;&amp;
+    value !== null &amp;&amp;
+    &quot;id&quot; in value &amp;&amp;
+    &quot;email&quot; in value
+  );
+}
+
+if (isUser(payload)) {
+  // payload is User in here
+}
+</code></pre>
+<p>Type predicates are checked. Casts aren&#39;t. The cost is the same; the safety is dramatically higher.</p>
+<h2 id="8-use-satisfies-to-validate-without-widening"><a class="heading-anchor" href="#8-use-satisfies-to-validate-without-widening" aria-hidden="true" tabindex="-1"></a>8. Use <code>satisfies</code> to validate without widening</h2>
+<p>The <code>satisfies</code> operator is one of the most underused features in TypeScript. It says &quot;this value should be assignable to this type, but please keep its narrow inferred type.&quot;</p>
+<pre><code class="language-ts">const config = {
+  port: 3000,
+  env: &quot;production&quot;,
+  features: [&quot;auth&quot;, &quot;billing&quot;],
+} satisfies {
+  port: number;
+  env: &quot;development&quot; | &quot;production&quot;;
+  features: string[];
+};
+
+config.features; // string[], not just `string[]` — the literal narrowness is preserved
+</code></pre>
+<p>This is great for configs, route maps, and any object literal where you want both validation and precise types.</p>
+<h2 id="9-stop-reaching-for-utility-types-you-dont-need"><a class="heading-anchor" href="#9-stop-reaching-for-utility-types-you-dont-need" aria-hidden="true" tabindex="-1"></a>9. Stop reaching for utility types you don&#39;t need</h2>
+<p><code>Partial&lt;T&gt;</code>, <code>Required&lt;T&gt;</code>, <code>Pick&lt;T&gt;</code>, <code>Omit&lt;T&gt;</code> are all useful. They&#39;re also abused. If you find yourself writing <code>Partial&lt;Pick&lt;Omit&lt;User, &quot;id&quot;&gt;, &quot;name&quot; | &quot;email&quot;&gt;&gt;</code>, you don&#39;t need a clever type — you need to define a separate <code>UserUpdateInput</code> type and stop trying to derive it.</p>
+<p>Types are documentation as much as they are constraints. A simple, named type is almost always better than a clever derived one.</p>
+<h2 id="10-treat-strict-mode-as-non-negotiable"><a class="heading-anchor" href="#10-treat-strict-mode-as-non-negotiable" aria-hidden="true" tabindex="-1"></a>10. Treat strict mode as non-negotiable</h2>
+<p><code>&quot;strict&quot;: true</code> in <code>tsconfig.json</code> should be on day one. Specifically:</p>
+<ul>
+<li><code>noUncheckedIndexedAccess</code>: forces you to handle <code>array[i]</code> possibly being <code>undefined</code>. This catches real bugs.</li>
+<li><code>noImplicitOverride</code>: prevents accidental overrides in classes.</li>
+<li><code>exactOptionalPropertyTypes</code>: makes <code>field?: T</code> actually mean <code>T | undefined</code>, not &quot;anything goes.&quot;</li>
+</ul>
+<p>Yes, all of these will create work the first time you turn them on. That work is finding bugs, not creating them.</p>
+<h2 id="what-you-can-skip"><a class="heading-anchor" href="#what-you-can-skip" aria-hidden="true" tabindex="-1"></a>What you can skip</h2>
+<p>Not every advanced feature is worth your time. In our experience, you can mostly ignore:</p>
+<ul>
+<li>Conditional types beyond simple use cases.</li>
+<li>The deepest levels of mapped types.</li>
+<li>Type-level computation that produces error messages a teammate has to ask Slack about.</li>
+</ul>
+<p>If a type is so clever that nobody on the team can read it, it&#39;s a liability, not an asset.</p>
+<p>The goal of TypeScript isn&#39;t a perfect type system. It&#39;s a codebase where the obvious bugs become impossible to write and where new contributors can change things without breaking them. Pick the patterns that move you toward that, and leave the rest.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/typescript/">TypeScript</a><a class="chip" href="/tag/patterns/">Patterns</a><a class="chip" href="/tag/code-quality/">Code Quality</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published March 29, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=TypeScript%20Patterns%20That%20Make%20Your%20Codebase%20Easier%20to%20Live%20With%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Ftypescript-patterns-everyday-codebases%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Ftypescript-patterns-everyday-codebases%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Ftypescript-patterns-everyday-codebases%2F&amp;t=TypeScript%20Patterns%20That%20Make%20Your%20Codebase%20Easier%20to%20Live%20With" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#1-make-impossible-states-impossible">1. Make impossible states impossible</a></li><li class="toc-l2"><a href="#2-use-branded-types-for-values-that-look-identical-but-arent">2. Use branded types for values that look identical but aren&#39;t</a></li><li class="toc-l2"><a href="#3-as-const-is-your-best-friend">3. as const is your best friend</a></li><li class="toc-l2"><a href="#4-stop-using-any-use-unknown-instead">4. Stop using any. Use unknown instead.</a></li><li class="toc-l2"><a href="#5-generic-functions-but-only-when-they-earn-their-keep">5. Generic functions, but only when they earn their keep</a></li><li class="toc-l2"><a href="#6-prefer-interface-for-public-shapes-type-for-everything-else">6. Prefer interface for public shapes, type for everything else</a></li><li class="toc-l2"><a href="#7-narrow-with-type-predicates-instead-of-casting">7. Narrow with type predicates instead of casting</a></li><li class="toc-l2"><a href="#8-use-satisfies-to-validate-without-widening">8. Use satisfies to validate without widening</a></li><li class="toc-l2"><a href="#9-stop-reaching-for-utility-types-you-dont-need">9. Stop reaching for utility types you don&#39;t need</a></li><li class="toc-l2"><a href="#10-treat-strict-mode-as-non-negotiable">10. Treat strict mode as non-negotiable</a></li><li class="toc-l2"><a href="#what-you-can-skip">What you can skip</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/clean-react-components/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-clean-react-components-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-clean-react-components-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-clean-react-components-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-clean-react-components-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-clean-react-components-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-bg)" />
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-glow)" />
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-grid)" />
+    <g transform="translate(280 200) rotate(63)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-clean-react-components-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Write React Components That Don&#39;t Get Refactored Twice</span></h3>
+        <p class="card-feature-desc">Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/database-schema-design/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-database-schema-design-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-database-schema-design-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-database-schema-design-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-database-schema-design-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-database-schema-design-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-bg)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-glow)" />
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-dots)" />
+    <g transform="translate(288 200) rotate(269)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-database-schema-design-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Designing a Database Schema You Won&#39;t Regret in Six Months</span></h3>
+        <p class="card-feature-desc">Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/debugging-modern-web-apps/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-debugging-modern-web-apps-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <radialGradient id="cover-debugging-modern-web-apps-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-debugging-modern-web-apps-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-debugging-modern-web-apps-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-debugging-modern-web-apps-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-bg)" />
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-glow)" />
+      <g transform="translate(315 200) rotate(284)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" fill="#1e293b" fill-opacity="0.55" />
+      <polygon points="0,-130 113,-65 113,65 0,130 -113,65 -113,-65" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">B</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">PRACTICES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-debugging-modern-web-apps-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Practices</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Debugging Modern Web Apps: A Field Guide</span></h3>
+        <p class="card-feature-desc">A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

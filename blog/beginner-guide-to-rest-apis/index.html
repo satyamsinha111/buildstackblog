@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Practical Beginner&#39;s Guide to REST APIs — BuildStack</title>
+<meta name="description" content="What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/beginner-guide-to-rest-apis/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/beginner-guide-to-rest-apis/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="A Practical Beginner&#39;s Guide to REST APIs — BuildStack" />
+<meta property="og:description" content="What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="A Practical Beginner&#39;s Guide to REST APIs — BuildStack" />
+<meta name="twitter:description" content="What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"A Practical Beginner's Guide to REST APIs","description":"What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.","datePublished":"2026-04-09","dateModified":"2026-04-09","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/beginner-guide-to-rest-apis/"},"keywords":"API, REST, HTTP, Backend","articleSection":"Developer Guides","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/developer-guides/">Developer Guides</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #10b981, #14b8a6, #0891b2);"></span>Developer Guides</p>
+          <h1 class="post-title">A Practical Beginner&#39;s Guide to REST APIs</h1>
+          <p class="post-lede">What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-04-09">April 9, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,061 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-beginner-guide-to-rest-apis-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-beginner-guide-to-rest-apis-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-beginner-guide-to-rest-apis-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-beginner-guide-to-rest-apis-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-bg)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-glow)" />
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-grid)" />
+    <g transform="translate(303 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(189)" fill="#064e3b" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(219)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-beginner-guide-to-rest-apis-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>If you&#39;ve ever called <code>fetch(&quot;/api/users&quot;)</code> and wondered what&#39;s actually going on under the hood, this guide is for you. We&#39;re going to build a real mental model of REST APIs — not the marketing version, not the academic version, the version that holds up when you have to debug something at 11 p.m.</p>
+<h2 id="what-rest-actually-means"><a class="heading-anchor" href="#what-rest-actually-means" aria-hidden="true" tabindex="-1"></a>What &quot;REST&quot; actually means</h2>
+<p>REST stands for Representational State Transfer. That sounds intimidating until you translate it: a REST API is a way for two programs to talk over HTTP using a small, predictable vocabulary.</p>
+<p>The vocabulary has three parts:</p>
+<ul>
+<li><strong>Resources</strong> — the nouns. A user, a post, an order. Each one has a URL.</li>
+<li><strong>Verbs</strong> — what you want to do to those resources. HTTP gives you GET, POST, PUT, PATCH, and DELETE.</li>
+<li><strong>Representations</strong> — how the data is encoded. Usually JSON in 2026.</li>
+</ul>
+<p>That&#39;s it. Most &quot;REST&quot; debates online are arguments about how strictly to follow these rules. In practice, every team draws the line somewhere different, and that&#39;s fine — as long as you&#39;re consistent.</p>
+<h2 id="a-worked-example"><a class="heading-anchor" href="#a-worked-example" aria-hidden="true" tabindex="-1"></a>A worked example</h2>
+<p>Let&#39;s design a small API for managing blog posts. The URL structure should read like English:</p>
+<ul>
+<li><code>GET /posts</code> — list posts</li>
+<li><code>GET /posts/123</code> — get one post</li>
+<li><code>POST /posts</code> — create a post</li>
+<li><code>PATCH /posts/123</code> — update part of a post</li>
+<li><code>DELETE /posts/123</code> — delete a post</li>
+</ul>
+<p>Notice what we didn&#39;t do:</p>
+<ul>
+<li><code>GET /getPosts</code></li>
+<li><code>POST /deletePost</code></li>
+<li><code>GET /posts?action=delete&amp;id=123</code></li>
+</ul>
+<p>The HTTP verb already says what you&#39;re doing. Putting the verb in the URL is duplication, and it makes things harder to read, log, and cache.</p>
+<h2 id="http-verbs-in-plain-english"><a class="heading-anchor" href="#http-verbs-in-plain-english" aria-hidden="true" tabindex="-1"></a>HTTP verbs in plain English</h2>
+<p>Here&#39;s the rule of thumb that has served us best:</p>
+<ul>
+<li><strong>GET</strong> — &quot;give me a thing.&quot; Should never change anything on the server. Safe to retry.</li>
+<li><strong>POST</strong> — &quot;make a new thing.&quot; Generally not safe to retry blindly.</li>
+<li><strong>PUT</strong> — &quot;replace this thing entirely with what I&#39;m sending.&quot;</li>
+<li><strong>PATCH</strong> — &quot;update part of this thing.&quot;</li>
+<li><strong>DELETE</strong> — &quot;remove this thing.&quot;</li>
+</ul>
+<p>Two things people get wrong:</p>
+<ol>
+<li>Using POST for everything. It works, but you lose the ability for browsers, proxies, and caches to optimize.</li>
+<li>Confusing PUT and PATCH. PUT is a full replacement; PATCH is a partial update. If your endpoint accepts only the fields you want to change, it&#39;s a PATCH.</li>
+</ol>
+<h2 id="status-codes-that-actually-matter"><a class="heading-anchor" href="#status-codes-that-actually-matter" aria-hidden="true" tabindex="-1"></a>Status codes that actually matter</h2>
+<p>Most APIs only need a small subset:</p>
+<ul>
+<li><strong>200 OK</strong> — &quot;here&#39;s what you asked for.&quot;</li>
+<li><strong>201 Created</strong> — &quot;I made the thing. Here it is.&quot;</li>
+<li><strong>204 No Content</strong> — &quot;I did the thing. Nothing to send back.&quot;</li>
+<li><strong>400 Bad Request</strong> — &quot;your input was invalid.&quot;</li>
+<li><strong>401 Unauthorized</strong> — &quot;I don&#39;t know who you are.&quot;</li>
+<li><strong>403 Forbidden</strong> — &quot;I know who you are, and you can&#39;t do this.&quot;</li>
+<li><strong>404 Not Found</strong> — &quot;no such resource.&quot;</li>
+<li><strong>409 Conflict</strong> — &quot;this clashes with the current state&quot; (good for duplicate emails).</li>
+<li><strong>422 Unprocessable Entity</strong> — &quot;I understood your request but it&#39;s semantically wrong.&quot;</li>
+<li><strong>429 Too Many Requests</strong> — &quot;slow down.&quot;</li>
+<li><strong>500 Internal Server Error</strong> — &quot;something broke on our side.&quot;</li>
+</ul>
+<p>The mistake to avoid: returning <code>200 OK</code> with <code>{ &quot;error&quot;: &quot;...&quot; }</code> in the body for actual errors. That breaks everything downstream that relies on status codes — monitoring, logging, retries, caches.</p>
+<h2 id="designing-request-bodies"><a class="heading-anchor" href="#designing-request-bodies" aria-hidden="true" tabindex="-1"></a>Designing request bodies</h2>
+<p>A few small rules go a long way:</p>
+<ul>
+<li>Use <code>camelCase</code> consistently (or <code>snake_case</code>, just pick one).</li>
+<li>Use proper types. Numbers as numbers, dates as ISO 8601 strings, booleans as booleans. Strings everywhere is a code smell.</li>
+<li>Keep nesting shallow. Two levels of nesting is usually plenty.</li>
+<li>Validate everything on input. Trust nothing the client sends.</li>
+</ul>
+<p>Here&#39;s a reasonable request to create a post:</p>
+<pre><code class="language-json">{
+  &quot;title&quot;: &quot;Hello, world&quot;,
+  &quot;body&quot;: &quot;Welcome to my blog.&quot;,
+  &quot;tags&quot;: [&quot;intro&quot;, &quot;meta&quot;],
+  &quot;publishedAt&quot;: &quot;2026-04-09T10:00:00Z&quot;
+}
+</code></pre>
+<p>And a reasonable error response:</p>
+<pre><code class="language-json">{
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;validation_failed&quot;,
+    &quot;message&quot;: &quot;Title is required.&quot;,
+    &quot;field&quot;: &quot;title&quot;
+  }
+}
+</code></pre>
+<p>A consistent error shape makes client code dramatically easier to write. Decide on yours early.</p>
+<h2 id="authentication-briefly"><a class="heading-anchor" href="#authentication-briefly" aria-hidden="true" tabindex="-1"></a>Authentication, briefly</h2>
+<p>Almost every real API needs auth. The two patterns you&#39;ll see most often:</p>
+<ul>
+<li><strong>Bearer tokens in the Authorization header</strong>: <code>Authorization: Bearer eyJ...</code>. Used for OAuth, JWTs, API keys.</li>
+<li><strong>Cookies with <code>Secure; HttpOnly; SameSite=Lax</code></strong>: used for browser-based sessions.</li>
+</ul>
+<p>Some practical advice:</p>
+<ul>
+<li>Don&#39;t put tokens in URLs. They end up in logs.</li>
+<li>Don&#39;t ship your API key in client-side code. If users can see it, they can steal it.</li>
+<li>Use HTTPS for everything. There is no excuse not to in 2026.</li>
+</ul>
+<h2 id="pagination-filtering-and-sorting"><a class="heading-anchor" href="#pagination-filtering-and-sorting" aria-hidden="true" tabindex="-1"></a>Pagination, filtering, and sorting</h2>
+<p>For any list endpoint, you&#39;ll want at least three query parameters:</p>
+<ul>
+<li><code>?limit=20&amp;cursor=abc</code> — pagination. Cursor-based scales better than <code>?page=2</code>.</li>
+<li><code>?sort=-createdAt</code> — sort by created date descending.</li>
+<li><code>?status=published</code> — filter.</li>
+</ul>
+<p>Pick one style and use it across every list endpoint. Inconsistency is the silent killer of API DX.</p>
+<h2 id="versioning-without-regret"><a class="heading-anchor" href="#versioning-without-regret" aria-hidden="true" tabindex="-1"></a>Versioning without regret</h2>
+<p>Some day, you will need to make a breaking change. Plan for it now. Two patterns work in practice:</p>
+<ul>
+<li><strong>URL versioning</strong>: <code>/v1/posts</code>. Easy, ugly, hard to argue with.</li>
+<li><strong>Header versioning</strong>: <code>Accept: application/vnd.example.v1+json</code>. Cleaner URLs, more friction for consumers.</li>
+</ul>
+<p>If you&#39;re a small team shipping a public API, URL versioning is fine. The important thing is that you have <em>some</em> way to ship <code>v2</code> without breaking <code>v1</code> consumers overnight.</p>
+<h2 id="consuming-a-rest-api-from-javascript"><a class="heading-anchor" href="#consuming-a-rest-api-from-javascript" aria-hidden="true" tabindex="-1"></a>Consuming a REST API from JavaScript</h2>
+<p>A safe baseline pattern:</p>
+<pre><code class="language-ts">async function api&lt;T&gt;(path: string, init?: RequestInit): Promise&lt;T&gt; {
+  const res = await fetch(path, {
+    ...init,
+    headers: {
+      &quot;Content-Type&quot;: &quot;application/json&quot;,
+      ...(init?.headers ?? {}),
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`API ${res.status}: ${text}`);
+  }
+
+  return res.json();
+}
+</code></pre>
+<p>Build everything else on top of this. Don&#39;t repeat error-handling logic across the codebase.</p>
+<h2 id="what-to-read-next"><a class="heading-anchor" href="#what-to-read-next" aria-hidden="true" tabindex="-1"></a>What to read next</h2>
+<p>If you want to take this further:</p>
+<ul>
+<li>Read <a href="https://stripe.com/docs/api" rel="noopener noreferrer" target="_blank">the Stripe API docs</a>. They&#39;re widely considered the gold standard.</li>
+<li>Look at OpenAPI / Swagger for documenting your APIs as a machine-readable spec.</li>
+<li>Try GraphQL once, just to understand what problems REST has.</li>
+</ul>
+<p>REST isn&#39;t a religion. It&#39;s a set of conventions that make HTTP-based systems easier to build, document, and debug. Get the basics right, stay consistent, and you&#39;ll have an API that other developers actually enjoy using — which is, in the end, the whole point.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/api/">API</a><a class="chip" href="/tag/rest/">REST</a><a class="chip" href="/tag/http/">HTTP</a><a class="chip" href="/tag/backend/">Backend</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published April 9, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=A%20Practical%20Beginner&#39;s%20Guide%20to%20REST%20APIs%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fbeginner-guide-to-rest-apis%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fbeginner-guide-to-rest-apis%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fbeginner-guide-to-rest-apis%2F&amp;t=A%20Practical%20Beginner&#39;s%20Guide%20to%20REST%20APIs" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#what-rest-actually-means">What &quot;REST&quot; actually means</a></li><li class="toc-l2"><a href="#a-worked-example">A worked example</a></li><li class="toc-l2"><a href="#http-verbs-in-plain-english">HTTP verbs in plain English</a></li><li class="toc-l2"><a href="#status-codes-that-actually-matter">Status codes that actually matter</a></li><li class="toc-l2"><a href="#designing-request-bodies">Designing request bodies</a></li><li class="toc-l2"><a href="#authentication-briefly">Authentication, briefly</a></li><li class="toc-l2"><a href="#pagination-filtering-and-sorting">Pagination, filtering, and sorting</a></li><li class="toc-l2"><a href="#versioning-without-regret">Versioning without regret</a></li><li class="toc-l2"><a href="#consuming-a-rest-api-from-javascript">Consuming a REST API from JavaScript</a></li><li class="toc-l2"><a href="#what-to-read-next">What to read next</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/graphql-vs-rest-comparison/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-graphql-vs-rest-comparison-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-graphql-vs-rest-comparison-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-graphql-vs-rest-comparison-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-graphql-vs-rest-comparison-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-graphql-vs-rest-comparison-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-bg)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-glow)" />
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-grid)" />
+    <g transform="translate(291 200) rotate(189)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-graphql-vs-rest-comparison-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">GraphQL vs REST: A Practical Comparison</span></h3>
+        <p class="card-feature-desc">Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/deploy-fullstack-app-walkthrough/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-deploy-fullstack-app-walkthrough-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-deploy-fullstack-app-walkthrough-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-deploy-fullstack-app-walkthrough-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-bg)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-glow)" />
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-dots)" />
+    <g transform="translate(285 200) rotate(5)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-deploy-fullstack-app-walkthrough-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</span></h3>
+        <p class="card-feature-desc">From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/javascript-async-await-promises/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-javascript-async-await-promises-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <radialGradient id="cover-javascript-async-await-promises-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-javascript-async-await-promises-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-javascript-async-await-promises-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-javascript-async-await-promises-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-bg)" />
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-glow)" />
+      <g transform="translate(317 200) rotate(300)">
+      <circle cx="0" cy="0" r="220" fill="#064e3b" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">G</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">GUIDES</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-javascript-async-await-promises-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Guides</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Understanding JavaScript Promises and Async/Await</span></h3>
+        <p class="card-feature-desc">A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

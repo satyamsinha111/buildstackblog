@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mastering React Server Components in Next.js — BuildStack</title>
+<meta name="description" content="Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/react-server-components-mastery/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/react-server-components-mastery/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="Mastering React Server Components in Next.js — BuildStack" />
+<meta property="og:description" content="Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Mastering React Server Components in Next.js — BuildStack" />
+<meta name="twitter:description" content="Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Mastering React Server Components in Next.js","description":"Server Components have changed how Next.js apps are built. Here's a working mental model — what they're for, where Client Components belong, and the patterns that scale.","datePublished":"2026-04-02","dateModified":"2026-04-02","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/react-server-components-mastery/"},"keywords":"React, Next.js, Server Components, Architecture","articleSection":"Web Development","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/web-development/">Web Development</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #0ea5e9, #6366f1, #7c3aed);"></span>Web Development</p>
+          <h1 class="post-title">Mastering React Server Components in Next.js</h1>
+          <p class="post-lede">Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-04-02">April 2, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,126 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-react-server-components-mastery-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-react-server-components-mastery-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-react-server-components-mastery-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-react-server-components-mastery-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-react-server-components-mastery-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-bg)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-glow)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-dots)" />
+    <g transform="translate(321 200) rotate(91)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>React Server Components are the kind of feature that looks small in the docs and rearranges your entire mental model in practice. If you&#39;ve been using Next.js&#39;s App Router for a while and still occasionally aren&#39;t sure why a component needs <code>&quot;use client&quot;</code> at the top, this guide is for you.</p>
+<p>We&#39;ll cut through the abstract framing (&quot;server-rendered React&quot;) and focus on what actually changes about how you write code.</p>
+<h2 id="the-one-line-mental-model"><a class="heading-anchor" href="#the-one-line-mental-model" aria-hidden="true" tabindex="-1"></a>The one-line mental model</h2>
+<p>A Server Component runs <strong>once, on the server, before the response is sent</strong>. A Client Component runs <strong>on the server during streaming, then again in the browser</strong> to handle interactivity.</p>
+<p>That&#39;s the whole concept. Everything else is implications of that sentence.</p>
+<p>A few things that fall out of it immediately:</p>
+<ul>
+<li>Server Components can do anything Node.js can do — read files, query databases, call private APIs. That code never reaches the browser.</li>
+<li>Server Components can&#39;t use <code>useState</code>, <code>useEffect</code>, or browser-only APIs. They&#39;ve already finished by the time the page is interactive.</li>
+<li>Client Components can use those things, but they need their JavaScript shipped to the user.</li>
+</ul>
+<h2 id="when-to-use-which"><a class="heading-anchor" href="#when-to-use-which" aria-hidden="true" tabindex="-1"></a>When to use which</h2>
+<p>The default in the App Router is Server Components. You only opt into a Client Component when you need one. The rule of thumb:</p>
+<ul>
+<li><strong>Use a Server Component when</strong>: you&#39;re rendering content, fetching data, composing layouts, doing anything that doesn&#39;t react to user input.</li>
+<li><strong>Use a Client Component when</strong>: you need interactivity (clicks, inputs, animations), browser APIs (<code>window</code>, <code>localStorage</code>), or React hooks for state.</li>
+</ul>
+<p>A typical page is mostly Server Components, with small Client Components for the interactive bits — a search box, a dropdown menu, a like button.</p>
+<h2 id="the-use-client-boundary"><a class="heading-anchor" href="#the-use-client-boundary" aria-hidden="true" tabindex="-1"></a>The &quot;use client&quot; boundary</h2>
+<p>When you add <code>&quot;use client&quot;</code> to a file, <strong>everything imported by that file becomes part of the client bundle</strong>. This is the rule that confuses people most.</p>
+<pre><code class="language-tsx">// app/components/Counter.tsx
+&quot;use client&quot;;
+
+import { useState } from &quot;react&quot;;
+import { ExpensiveDateLib } from &quot;expensive-date-lib&quot;;
+
+export function Counter() {
+  const [n, setN] = useState(0);
+  return &lt;button onClick={() =&gt; setN(n + 1)}&gt;{n}&lt;/button&gt;;
+}
+</code></pre>
+<p>The moment you add <code>&quot;use client&quot;</code>, <code>expensive-date-lib</code> is now in your client bundle. If you didn&#39;t realize that, you&#39;re shipping kilobytes of JavaScript to the user that you didn&#39;t need to.</p>
+<p>The fix is to keep &quot;use client&quot; components small and leaf-shaped. They should be the green tips of the tree, not the trunk.</p>
+<h2 id="composing-server-and-client-components"><a class="heading-anchor" href="#composing-server-and-client-components" aria-hidden="true" tabindex="-1"></a>Composing Server and Client Components</h2>
+<p>Two patterns cover most cases:</p>
+<h3 id="pattern-1-server-component-as-the-parent"><a class="heading-anchor" href="#pattern-1-server-component-as-the-parent" aria-hidden="true" tabindex="-1"></a>Pattern 1: Server Component as the parent</h3>
+<pre><code class="language-tsx">// app/page.tsx (Server Component)
+import { LikeButton } from &quot;./LikeButton&quot;;
+import { db } from &quot;@/lib/db&quot;;
+
+export default async function Page() {
+  const post = await db.post.findUnique({ where: { id: &quot;1&quot; } });
+  return (
+    &lt;article&gt;
+      &lt;h1&gt;{post.title}&lt;/h1&gt;
+      &lt;p&gt;{post.body}&lt;/p&gt;
+      &lt;LikeButton postId={post.id} initialCount={post.likes} /&gt;
+    &lt;/article&gt;
+  );
+}
+</code></pre>
+<p>The data is fetched on the server. Only the tiny <code>LikeButton</code> ships to the client. This is the common case.</p>
+<h3 id="pattern-2-passing-server-components-as-children-to-a-client-component"><a class="heading-anchor" href="#pattern-2-passing-server-components-as-children-to-a-client-component" aria-hidden="true" tabindex="-1"></a>Pattern 2: passing Server Components as children to a Client Component</h3>
+<p>This one trips people up. You can do this:</p>
+<pre><code class="language-tsx">// app/page.tsx (Server Component)
+import { Modal } from &quot;./Modal&quot;;
+import { Article } from &quot;./Article&quot;; // Server Component
+
+export default function Page() {
+  return (
+    &lt;Modal&gt;
+      &lt;Article /&gt;
+    &lt;/Modal&gt;
+  );
+}
+</code></pre>
+<p>Even though <code>Modal</code> is a Client Component, <code>Article</code> is rendered on the server and passed in as a child. The client never sees <code>Article</code>&#39;s implementation — it just receives the rendered output.</p>
+<p>This pattern is the escape hatch when you need a Client Component wrapping Server Components. Use it sparingly; it&#39;s powerful and easy to abuse.</p>
+<h2 id="data-fetching-simplified"><a class="heading-anchor" href="#data-fetching-simplified" aria-hidden="true" tabindex="-1"></a>Data fetching, simplified</h2>
+<p>The biggest practical win of Server Components is that you can fetch data anywhere a component renders, without <code>useEffect</code>, without spinners, without a separate API layer.</p>
+<pre><code class="language-tsx">async function PostList() {
+  const posts = await db.post.findMany({ take: 10 });
+  return (
+    &lt;ul&gt;
+      {posts.map((p) =&gt; (
+        &lt;li key={p.id}&gt;{p.title}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+</code></pre>
+<p>A few things to know:</p>
+<ul>
+<li>React deduplicates fetches with the same URL automatically within a single render.</li>
+<li><code>fetch</code> is patched in Server Components to support caching and revalidation directly.</li>
+<li>You can co-locate the query with the component that uses it, instead of pushing data through props from the page level.</li>
+</ul>
+<h2 id="streaming-and-suspense"><a class="heading-anchor" href="#streaming-and-suspense" aria-hidden="true" tabindex="-1"></a>Streaming and Suspense</h2>
+<p>Server Components compose with React&#39;s Suspense to give you streamed responses. The user starts seeing the page before slow data has finished loading.</p>
+<pre><code class="language-tsx">import { Suspense } from &quot;react&quot;;
+
+export default function Page() {
+  return (
+    &lt;&gt;
+      &lt;Header /&gt;
+      &lt;Suspense fallback={&lt;PostSkeleton /&gt;}&gt;
+        &lt;SlowPosts /&gt;
+      &lt;/Suspense&gt;
+    &lt;/&gt;
+  );
+}
+</code></pre>
+<p>The header renders instantly. <code>&lt;SlowPosts /&gt;</code> streams in when its data is ready. No loading spinner inside a <code>useEffect</code>, no flash of empty content.</p>
+<h2 id="server-actions-for-mutations"><a class="heading-anchor" href="#server-actions-for-mutations" aria-hidden="true" tabindex="-1"></a>Server Actions for mutations</h2>
+<p>Server Actions let you write mutations as plain async functions on the server, called directly from the client:</p>
+<pre><code class="language-tsx">// app/actions.ts
+&quot;use server&quot;;
+
+export async function likePost(postId: string) {
+  await db.post.update({
+    where: { id: postId },
+    data: { likes: { increment: 1 } },
+  });
+}
+</code></pre>
+<p>Used from a Client Component:</p>
+<pre><code class="language-tsx">&quot;use client&quot;;
+import { likePost } from &quot;./actions&quot;;
+
+export function LikeButton({ postId }: { postId: string }) {
+  return &lt;button onClick={() =&gt; likePost(postId)}&gt;Like&lt;/button&gt;;
+}
+</code></pre>
+<p>You can replace a lot of REST endpoints with Server Actions. Two cautions:</p>
+<ul>
+<li>They&#39;re still HTTP under the hood. Treat their inputs as untrusted, validate every parameter.</li>
+<li>Don&#39;t return huge objects from Server Actions. The serialization cost adds up.</li>
+</ul>
+<h2 id="common-pitfalls"><a class="heading-anchor" href="#common-pitfalls" aria-hidden="true" tabindex="-1"></a>Common pitfalls</h2>
+<p>A few mistakes we keep seeing:</p>
+<ul>
+<li><strong>Adding <code>&quot;use client&quot;</code> to a layout</strong> because one component inside needs interactivity. Now everything is a Client Component. Move the <code>&quot;use client&quot;</code> to the leaf.</li>
+<li><strong>Trying to use Server Component features inside a Client Component.</strong> You can&#39;t <code>await db.query()</code> in a Client Component. Lift the data fetching to a Server Component above it.</li>
+<li><strong>Treating Server Components as a performance silver bullet.</strong> They reduce client JavaScript, which often improves performance — but a slow database query is still slow whether it runs on the server or in a Client Component.</li>
+</ul>
+<h2 id="a-useful-default-architecture"><a class="heading-anchor" href="#a-useful-default-architecture" aria-hidden="true" tabindex="-1"></a>A useful default architecture</h2>
+<p>For a typical Next.js App Router project:</p>
+<ul>
+<li>Pages and layouts: Server Components.</li>
+<li>Data-fetching wrappers: Server Components.</li>
+<li>Anything with <code>useState</code>, <code>useEffect</code>, or <code>onClick</code>: Client Component.</li>
+<li>Mutations: Server Actions.</li>
+<li>Validation and authorization: in a shared module imported by both.</li>
+</ul>
+<p>You&#39;ll deviate from this in specific places, and that&#39;s fine. Have a default, then break it on purpose.</p>
+<p>The shift to Server Components feels uncomfortable for about a week. After that, the old way of doing things — <code>useEffect</code> for data, separate API routes for mutations, hydration mismatches — feels weirdly cumbersome. Lean into the model. The framework is doing more of the work for you than it looks.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/react/">React</a><a class="chip" href="/tag/next.js/">Next.js</a><a class="chip" href="/tag/server-components/">Server Components</a><a class="chip" href="/tag/architecture/">Architecture</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published April 2, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=Mastering%20React%20Server%20Components%20in%20Next.js%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Freact-server-components-mastery%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Freact-server-components-mastery%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Freact-server-components-mastery%2F&amp;t=Mastering%20React%20Server%20Components%20in%20Next.js" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#the-one-line-mental-model">The one-line mental model</a></li><li class="toc-l2"><a href="#when-to-use-which">When to use which</a></li><li class="toc-l2"><a href="#the-use-client-boundary">The &quot;use client&quot; boundary</a></li><li class="toc-l2"><a href="#composing-server-and-client-components">Composing Server and Client Components</a></li><li class="toc-l3"><a href="#pattern-1-server-component-as-the-parent">Pattern 1: Server Component as the parent</a></li><li class="toc-l3"><a href="#pattern-2-passing-server-components-as-children-to-a-client-component">Pattern 2: passing Server Components as children to a Client Component</a></li><li class="toc-l2"><a href="#data-fetching-simplified">Data fetching, simplified</a></li><li class="toc-l2"><a href="#streaming-and-suspense">Streaming and Suspense</a></li><li class="toc-l2"><a href="#server-actions-for-mutations">Server Actions for mutations</a></li><li class="toc-l2"><a href="#common-pitfalls">Common pitfalls</a></li><li class="toc-l2"><a href="#a-useful-default-architecture">A useful default architecture</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/build-authentication-in-nextjs/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-build-authentication-in-nextjs-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-build-authentication-in-nextjs-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-build-authentication-in-nextjs-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-build-authentication-in-nextjs-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-build-authentication-in-nextjs-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-bg)" />
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-glow)" />
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-dots)" />
+    <g transform="translate(288 200) rotate(110)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Build Authentication in Next.js: A Step-by-Step Walkthrough</span></h3>
+        <p class="card-feature-desc">A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/structuring-large-react-applications/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-structuring-large-react-applications-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-structuring-large-react-applications-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-structuring-large-react-applications-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-structuring-large-react-applications-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-structuring-large-react-applications-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-bg)" />
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-glow)" />
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-grid)" />
+    <g transform="translate(286 200) rotate(308)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Structure a Large React Application Without It Becoming a Maze</span></h3>
+        <p class="card-feature-desc">Folder structures, module boundaries, and team conventions that keep React projects navigable as they grow from one engineer to twenty.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/tailwind-vs-css-in-js/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-tailwind-vs-css-in-js-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-tailwind-vs-css-in-js-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-tailwind-vs-css-in-js-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-tailwind-vs-css-in-js-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-tailwind-vs-css-in-js-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-bg)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-glow)" />
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-grid)" />
+    <g transform="translate(308 200)">
+      <rect x="-150" y="-150" width="300" height="300" rx="24" transform="rotate(229)" fill="#312e81" fill-opacity="0.55" />
+      <rect x="-110" y="-110" width="220" height="220" rx="18" transform="rotate(259)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-tailwind-vs-css-in-js-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Tailwind CSS vs CSS-in-JS: How to Actually Choose</span></h3>
+        <p class="card-feature-desc">A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

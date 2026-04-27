@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to Build Authentication in Next.js: A Step-by-Step Walkthrough — BuildStack</title>
+<meta name="description" content="A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas." />
+<meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="BuildStack" />
+<meta name="author" content="BuildStack Editorial" />
+<meta name="generator" content="BuildStack static generator" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://buildstack.dev/blog/build-authentication-in-nextjs/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title="BuildStack feed" href="/rss.xml" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://buildstack.dev/blog/build-authentication-in-nextjs/" />
+<meta property="og:site_name" content="BuildStack" />
+<meta property="og:title" content="How to Build Authentication in Next.js: A Step-by-Step Walkthrough — BuildStack" />
+<meta property="og:description" content="A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas." />
+<meta property="og:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to Build Authentication in Next.js: A Step-by-Step Walkthrough — BuildStack" />
+<meta name="twitter:description" content="A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas." />
+<meta name="twitter:image" content="https://buildstack.dev/og-default.png" />
+<meta name="twitter:creator" content="@buildstack" />
+<meta name="google-adsense-account" content="ca-pub-1730389831295415" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<script>
+(function(){try{var s=localStorage.getItem('buildstack-theme');var sd=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||((!s||s==='system')&&sd))?'dark':'light';if(r==='dark')document.documentElement.classList.add('dark');document.documentElement.style.colorScheme=r;}catch(e){}})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Build Authentication in Next.js: A Step-by-Step Walkthrough","description":"A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas.","datePublished":"2026-04-18","dateModified":"2026-04-18","author":{"@type":"Organization","name":"BuildStack Editorial"},"publisher":{"@type":"Organization","name":"BuildStack","url":"https://buildstack.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://buildstack.dev/blog/build-authentication-in-nextjs/"},"keywords":"Next.js, Authentication, React, Security","articleSection":"Web Development","inLanguage":"en-US"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header-inner">
+    <a class="logo" href="/" aria-label="BuildStack — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="logo-text">BuildStack</span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a><a class="nav-link is-active" href="/blog/">Articles</a><a class="nav-link" href="/about/">About</a><a class="nav-link" href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-search" href="/blog/" aria-label="Search articles" title="Search articles">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta" href="/blog/">Read articles</a>
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle menu">
+        <svg class="icon-burger" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <svg class="icon-close" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container">
+      <a class="mobile-nav-link" href="/">Home</a><a class="mobile-nav-link is-active" href="/blog/">Articles</a><a class="mobile-nav-link" href="/about/">About</a><a class="mobile-nav-link" href="/contact/">Contact</a>
+      <a class="btn btn-primary mobile-cta" href="/blog/">Read articles</a>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main">
+<article class="post">
+      <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+
+      <header class="container post-head">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/blog/">Articles</a></li>
+            <li aria-hidden="true">/</li><li><a href="/category/web-development/">Web Development</a></li>
+          </ol>
+        </nav>
+        <div class="post-head-inner">
+          <p class="eyebrow eyebrow-dot"><span class="eyebrow-pill" style="background-image:linear-gradient(90deg, #0ea5e9, #6366f1, #7c3aed);"></span>Web Development</p>
+          <h1 class="post-title">How to Build Authentication in Next.js: A Step-by-Step Walkthrough</h1>
+          <p class="post-lede">A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas.</p>
+          <div class="post-meta">
+            <span class="post-author">BuildStack Editorial</span>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-04-18">April 18, 2026</time>
+            <span aria-hidden="true">·</span>
+            <span class="mono">5 min read</span>
+            <span aria-hidden="true">·</span>
+            <span class="mono">1,023 words</span>
+          </div>
+        </div>
+        <div class="post-cover">
+          <div class="cover cover-post" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-build-authentication-in-nextjs-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-build-authentication-in-nextjs-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-build-authentication-in-nextjs-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-build-authentication-in-nextjs-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-build-authentication-in-nextjs-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-bg)" />
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-glow)" />
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-dots)" />
+    <g transform="translate(288 200) rotate(110)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-build-authentication-in-nextjs-vignette)" />
+    </svg>
+  </div>
+        </div>
+      </header>
+
+      <div class="container post-body-wrap">
+        <div class="post-body-grid">
+          <div class="post-body">
+            <div class="prose article-body"><p>Authentication looks deceptively simple. You sign someone in, you store something in a cookie, you check that cookie on every request. Then real life shows up: refresh tokens, session invalidation, edge runtimes, role-based access, the email you definitely should not be storing in plain text. This guide walks through how to add authentication to a Next.js App Router project the way you&#39;d actually ship it in production — not the textbook version.</p>
+<p>We&#39;ll use <a href="https://authjs.dev" rel="noopener noreferrer" target="_blank">Auth.js</a> (the successor to NextAuth) because it sits at the right level of abstraction: opinionated enough to keep you out of trouble, flexible enough to extend.</p>
+<h2 id="what-you-actually-need-from-auth"><a class="heading-anchor" href="#what-you-actually-need-from-auth" aria-hidden="true" tabindex="-1"></a>What you actually need from &quot;auth&quot;</h2>
+<p>Before writing a line of code, write down what you want.</p>
+<ul>
+<li><strong>Identity</strong>: who is this user, and how do they prove it?</li>
+<li><strong>Sessions</strong>: how do you remember them on the next request?</li>
+<li><strong>Authorization</strong>: what are they allowed to do?</li>
+<li><strong>Recovery</strong>: what happens when they forget their password or lose access?</li>
+</ul>
+<p>If you skip step four, you&#39;ll end up shipping it anyway — usually as a 2 a.m. patch. Plan for it now.</p>
+<h2 id="installing-the-basics"><a class="heading-anchor" href="#installing-the-basics" aria-hidden="true" tabindex="-1"></a>Installing the basics</h2>
+<p>Start with a fresh Next.js 15 App Router project. Then add Auth.js and a database adapter. We&#39;ll use Prisma + PostgreSQL because they&#39;re boring and well-supported.</p>
+<pre><code class="language-bash">npm install next-auth@beta @auth/prisma-adapter prisma @prisma/client
+npx prisma init
+</code></pre>
+<p>Create your <code>.env</code>:</p>
+<pre><code class="language-bash">AUTH_SECRET=&quot;run: openssl rand -base64 32&quot;
+DATABASE_URL=&quot;postgresql://user:pass@localhost:5432/app&quot;
+GOOGLE_CLIENT_ID=&quot;...&quot;
+GOOGLE_CLIENT_SECRET=&quot;...&quot;
+</code></pre>
+<p>Generate <code>AUTH_SECRET</code> with <code>openssl rand -base64 32</code>. Treat it like a database password: never commit it, rotate it if it leaks.</p>
+<h2 id="defining-your-schema"><a class="heading-anchor" href="#defining-your-schema" aria-hidden="true" tabindex="-1"></a>Defining your schema</h2>
+<p>You don&#39;t need to memorize the Auth.js schema. Copy it from the docs and adapt. The minimum is <code>User</code>, <code>Account</code>, <code>Session</code>, and <code>VerificationToken</code>. Add a <code>role</code> field on <code>User</code> early — retrofitting roles later is painful.</p>
+<pre><code class="language-prisma">model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  image         String?
+  role          Role     @default(USER)
+  createdAt     DateTime @default(now())
+  accounts      Account[]
+  sessions      Session[]
+}
+
+enum Role {
+  USER
+  EDITOR
+  ADMIN
+}
+</code></pre>
+<p>Run <code>npx prisma migrate dev --name init</code> and you have a database.</p>
+<h2 id="wiring-up-authjs"><a class="heading-anchor" href="#wiring-up-authjs" aria-hidden="true" tabindex="-1"></a>Wiring up Auth.js</h2>
+<p>Create <code>auth.ts</code> at your project root:</p>
+<pre><code class="language-ts">import NextAuth from &quot;next-auth&quot;;
+import Google from &quot;next-auth/providers/google&quot;;
+import { PrismaAdapter } from &quot;@auth/prisma-adapter&quot;;
+import { prisma } from &quot;@/lib/prisma&quot;;
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [Google],
+  session: { strategy: &quot;database&quot; },
+  callbacks: {
+    async session({ session, user }) {
+      session.user.id = user.id;
+      session.user.role = (user as any).role;
+      return session;
+    },
+  },
+});
+</code></pre>
+<p>Then expose the route handler at <code>app/api/auth/[...nextauth]/route.ts</code>:</p>
+<pre><code class="language-ts">export { GET, POST } from &quot;@/auth&quot;;
+</code></pre>
+<p>Two files, and you have a working OAuth flow. The temptation now is to start adding features. Resist it. First, prove sign-in works end to end, then layer everything else on.</p>
+<h2 id="reading-the-session-in-server-components"><a class="heading-anchor" href="#reading-the-session-in-server-components" aria-hidden="true" tabindex="-1"></a>Reading the session in Server Components</h2>
+<p>In the App Router, you read the session directly on the server:</p>
+<pre><code class="language-tsx">import { auth } from &quot;@/auth&quot;;
+
+export default async function Dashboard() {
+  const session = await auth();
+  if (!session) return &lt;p&gt;Please sign in.&lt;/p&gt;;
+  return &lt;p&gt;Welcome back, {session.user.name}.&lt;/p&gt;;
+}
+</code></pre>
+<p>No useEffect, no client-side flicker, no spinner before the layout settles. This is the single biggest reason to use Server Components for auth-aware UI.</p>
+<h2 id="protecting-routes-with-middleware"><a class="heading-anchor" href="#protecting-routes-with-middleware" aria-hidden="true" tabindex="-1"></a>Protecting routes with middleware</h2>
+<p>Don&#39;t try to gate every page with manual checks. Use a single <code>middleware.ts</code>:</p>
+<pre><code class="language-ts">import { auth } from &quot;@/auth&quot;;
+
+export default auth((req) =&gt; {
+  const isLoggedIn = !!req.auth;
+  const isProtected = req.nextUrl.pathname.startsWith(&quot;/dashboard&quot;);
+
+  if (isProtected &amp;&amp; !isLoggedIn) {
+    return Response.redirect(new URL(&quot;/login&quot;, req.url));
+  }
+});
+
+export const config = {
+  matcher: [&quot;/dashboard/:path*&quot;, &quot;/account/:path*&quot;],
+};
+</code></pre>
+<p>Two rules of thumb:</p>
+<ul>
+<li>Keep the matcher narrow. The middleware runs on every matched request.</li>
+<li>Don&#39;t query your database inside middleware. Use what&#39;s already in the JWT or session token.</li>
+</ul>
+<h2 id="adding-email-password-carefully"><a class="heading-anchor" href="#adding-email-password-carefully" aria-hidden="true" tabindex="-1"></a>Adding email + password (carefully)</h2>
+<p>OAuth covers most modern apps. If you need email + password, use the Credentials provider — but understand what you&#39;re signing up for: <strong>you</strong> are responsible for password hashing, breach detection, lockouts, and rate limiting.</p>
+<p>At minimum:</p>
+<ul>
+<li>Hash with <code>bcrypt</code> or <code>argon2id</code>. Never store plain text. Never store a &quot;lightly obfuscated&quot; password.</li>
+<li>Rate-limit failed attempts per email <strong>and</strong> per IP.</li>
+<li>Force a verified email before granting access to any meaningful action.</li>
+</ul>
+<p>If that list makes you nervous, pick a managed identity provider (Clerk, WorkOS, or Auth0). Outsourcing this is rarely the wrong call.</p>
+<h2 id="authorization-not-just-authentication"><a class="heading-anchor" href="#authorization-not-just-authentication" aria-hidden="true" tabindex="-1"></a>Authorization, not just authentication</h2>
+<p>A logged-in user is not the same as an authorized user. Build a tiny helper and use it everywhere:</p>
+<pre><code class="language-ts">export async function requireRole(role: Role) {
+  const session = await auth();
+  if (!session) throw new Response(&quot;Unauthorized&quot;, { status: 401 });
+  if (session.user.role !== role &amp;&amp; session.user.role !== &quot;ADMIN&quot;) {
+    throw new Response(&quot;Forbidden&quot;, { status: 403 });
+  }
+  return session;
+}
+</code></pre>
+<p>Use it inside Server Actions, route handlers, and Server Components. The point is to centralize the check so an audit later is &quot;grep for <code>requireRole</code>&quot; instead of a multi-day archaeology dig.</p>
+<h2 id="things-that-will-bite-you"><a class="heading-anchor" href="#things-that-will-bite-you" aria-hidden="true" tabindex="-1"></a>Things that will bite you</h2>
+<p>A few hard-won lessons:</p>
+<ul>
+<li><strong>Cookies and edge runtimes</strong>: not every cookie option works at the edge. If you see &quot;session lost on navigation,&quot; check the runtime your middleware is using.</li>
+<li><strong>Local vs production callback URLs</strong>: every OAuth provider needs production redirect URIs configured. Plan for at least three: local, preview, production.</li>
+<li><strong>Session invalidation</strong>: when a user changes password or you ban them, their existing JWTs are still valid until they expire. Use database sessions if invalidation matters, or accept short JWT lifetimes.</li>
+</ul>
+<h2 id="where-to-go-from-here"><a class="heading-anchor" href="#where-to-go-from-here" aria-hidden="true" tabindex="-1"></a>Where to go from here</h2>
+<p>Once the basics work, the next things worth building, in order:</p>
+<ol>
+<li><strong>Email magic links</strong> for passwordless sign-in.</li>
+<li><strong>MFA</strong> for accounts that touch money or admin permissions.</li>
+<li><strong>An audit log</strong> for security-sensitive actions (sign-in, password change, role changes).</li>
+<li><strong>A <code>/account</code> page</strong> where users can revoke sessions and remove linked OAuth providers.</li>
+</ol>
+<p>Authentication is one of those areas where doing 80% of the work gets you 30% of the value. Plan a little more than feels necessary up front, keep your authorization logic centralized, and treat your secrets like the keys to the building. Future-you will be glad.</p>
+</div>
+            <div class="post-tags">
+          <p class="eyebrow">Filed under</p>
+          <div class="post-tags-row">
+            <a class="chip" href="/tag/next.js/">Next.js</a><a class="chip" href="/tag/authentication/">Authentication</a><a class="chip" href="/tag/react/">React</a><a class="chip" href="/tag/security/">Security</a>
+          </div>
+        </div>
+            <footer class="post-footer">
+              <div class="post-footer-grid">
+                <div class="author-block">
+                  <div class="author-avatar">BE</div>
+                  <div>
+                    <p class="eyebrow">Written by</p>
+                    <p class="author-name">BuildStack Editorial</p>
+                    <p class="author-bio">Published April 18, 2026. The BuildStack editorial team is a small group of working engineers writing about the craft of shipping software.</p>
+                    <div class="author-links">
+                      <a class="link-underline" href="/about/">About the team</a>
+                      <span aria-hidden="true">·</span>
+                      <a class="link-underline" href="/contact/">Get in touch</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="share-block">
+                  <p class="eyebrow">Share this article</p>
+                  <div class="share-buttons">
+                    <a class="btn btn-secondary share-btn" href="https://twitter.com/intent/tweet?text=How%20to%20Build%20Authentication%20in%20Next.js%3A%20A%20Step-by-Step%20Walkthrough%20%E2%80%94%20BuildStack&amp;url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fbuild-authentication-in-nextjs%2F" target="_blank" rel="noopener noreferrer">Share on X</a>
+                    <a class="btn btn-secondary share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fbuild-authentication-in-nextjs%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="btn btn-secondary share-btn" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fbuildstack.dev%2Fblog%2Fbuild-authentication-in-nextjs%2F&amp;t=How%20to%20Build%20Authentication%20in%20Next.js%3A%20A%20Step-by-Step%20Walkthrough" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                  </div>
+                  <p class="share-note">Found a typo or have feedback? Email <a class="link-underline" href="mailto:hello@buildstack.dev">hello@buildstack.dev</a>.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+          <aside class="toc-aside">
+          <div class="sticky-aside">
+            <p class="eyebrow">On this page</p>
+            <ol class="toc-list">
+              <li class="toc-l2"><a href="#what-you-actually-need-from-auth">What you actually need from &quot;auth&quot;</a></li><li class="toc-l2"><a href="#installing-the-basics">Installing the basics</a></li><li class="toc-l2"><a href="#defining-your-schema">Defining your schema</a></li><li class="toc-l2"><a href="#wiring-up-authjs">Wiring up Auth.js</a></li><li class="toc-l2"><a href="#reading-the-session-in-server-components">Reading the session in Server Components</a></li><li class="toc-l2"><a href="#protecting-routes-with-middleware">Protecting routes with middleware</a></li><li class="toc-l2"><a href="#adding-email-password-carefully">Adding email + password (carefully)</a></li><li class="toc-l2"><a href="#authorization-not-just-authentication">Authorization, not just authentication</a></li><li class="toc-l2"><a href="#things-that-will-bite-you">Things that will bite you</a></li><li class="toc-l2"><a href="#where-to-go-from-here">Where to go from here</a></li>
+            </ol>
+          </div>
+        </aside>
+        </div>
+      </div>
+
+      <section class="container section section-bordered">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Keep reading</p>
+                  <h2 class="section-title">Related articles</h2>
+                </div>
+                <a class="section-link" href="/blog/">All articles →</a>
+              </div>
+              <div class="grid-3">
+                <a class="card-feature" href="/blog/react-server-components-mastery/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-react-server-components-mastery-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-react-server-components-mastery-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-react-server-components-mastery-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-react-server-components-mastery-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-react-server-components-mastery-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-bg)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-glow)" />
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-dots)" />
+    <g transform="translate(321 200) rotate(91)">
+      <path d="M-200 0 Q -100 -180 0 0 T 200 0" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+      <path d="M-200 30 Q -100 -150 0 30 T 200 30" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M-200 -30 Q -100 -210 0 -30 T 200 -30" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-react-server-components-mastery-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">5 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">Mastering React Server Components in Next.js</span></h3>
+        <p class="card-feature-desc">Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/picking-frontend-framework-2026/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-picking-frontend-framework-2026-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-picking-frontend-framework-2026-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-picking-frontend-framework-2026-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-picking-frontend-framework-2026-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-picking-frontend-framework-2026-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-bg)" />
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-glow)" />
+      <g transform="translate(287 200) rotate(60)">
+      <circle cx="0" cy="0" r="220" fill="#312e81" fill-opacity="0.5" />
+      <circle cx="-60" cy="-40" r="160" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none" />
+      <circle cx="60" cy="40" r="120" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" fill="none" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-picking-frontend-framework-2026-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">An Honest Guide to Picking a Frontend Framework in 2026</span></h3>
+        <p class="card-feature-desc">React, Next.js, Svelte, Solid, Astro, and the rest — a practical comparison of where each framework fits, written for people choosing one for a real project.</p>
+      </div>
+    </a><a class="card-feature" href="/blog/structuring-large-react-applications/">
+      <div class="cover cover-feature" aria-hidden="true">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <defs>
+        <linearGradient id="cover-structuring-large-react-applications-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0ea5e9" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <radialGradient id="cover-structuring-large-react-applications-glow" cx="20%" cy="20%" r="60%" fx="20%" fy="20%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="cover-structuring-large-react-applications-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#ffffff" fill-opacity="0.18" />
+        </pattern>
+        <pattern id="cover-structuring-large-react-applications-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.08" fill="none" />
+        </pattern>
+        <linearGradient id="cover-structuring-large-react-applications-vignette" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-bg)" />
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-glow)" />
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-grid)" />
+    <g transform="translate(286 200) rotate(308)">
+      <line x1="-260" y1="-100" x2="260" y2="-100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <line x1="-260" y1="0" x2="260" y2="0" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" />
+      <line x1="-260" y1="100" x2="260" y2="100" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+      <circle cx="-180" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <circle cx="0" cy="-100" r="4" fill="#ffffff" fill-opacity="0.7" />
+      <circle cx="120" cy="100" r="5" fill="#ffffff" fill-opacity="0.8" />
+    </g>
+      <g>
+        <text x="32" y="56" fill="#ffffff" fill-opacity="0.85" font-family="ui-serif, Georgia, serif" font-size="44" font-weight="500" letter-spacing="-0.02em">W</text>
+        <text x="32" y="380" fill="#ffffff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" letter-spacing="0.16em">WEB DEV</text>
+      </g>
+      <rect width="600" height="400" fill="url(#cover-structuring-large-react-applications-vignette)" />
+    </svg>
+  </div>
+      <div>
+        <div class="eyebrow">
+          <span>Web Dev</span>
+          <span aria-hidden="true">·</span>
+          <span class="mono">6 min</span>
+        </div>
+        <h3 class="card-feature-title"><span class="title-underline">How to Structure a Large React Application Without It Becoming a Maze</span></h3>
+        <p class="card-feature-desc">Folder structures, module boundaries, and team conventions that keep React projects navigable as they grow from one engineer to twenty.</p>
+      </div>
+    </a>
+              </div>
+            </section>
+
+      <section class="container section"><section class="subscribe">
+    <div class="subscribe-bg" aria-hidden="true"></div>
+    <div class="subscribe-grid">
+      <div>
+        <p class="eyebrow">The Newsletter</p>
+        <h2 class="subscribe-title">One thoughtful article a week.<br /><em>No spam. No fluff.</em></h2>
+        <p class="subscribe-desc">Get new deep dives on web development, AI tools, and developer workflow delivered to your inbox. Unsubscribe in one click.</p>
+      </div>
+      <form class="subscribe-form" data-subscribe action="https://formspree.io/f/your-id" method="post">
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="subscribe-row">
+          <input id="newsletter-email" name="email" type="email" required placeholder="you@company.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        <p class="subscribe-fineprint">We respect your inbox. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="subscribe-success" data-subscribe-success hidden>✓ Thanks — check your inbox to confirm.</p>
+      </form>
+    </div>
+  </section></section>
+    </article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="/" aria-label="BuildStack — home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 4.5L8 1.5L14 4.5L8 7.5L2 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M2 11.5L8 14.5L14 11.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text">BuildStack</span>
+        </a>
+        <p class="footer-bio">BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</p>
+        <p class="footer-contact">Editorial: <a href="mailto:hello@buildstack.dev">hello@buildstack.dev</a></p>
+      </div>
+      <div>
+        <h4 class="eyebrow">Explore</h4>
+        <ul class="footer-list"><li><a href="/blog/">Latest articles</a></li><li><a href="/category/web-development/">Web Development</a></li><li><a href="/category/ai-tools/">AI Tools</a></li><li><a href="/category/developer-guides/">Developer Guides</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Company</h4>
+        <ul class="footer-list"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4 class="eyebrow">Legal</h4>
+        <ul class="footer-list"><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/terms/">Terms &amp; Conditions</a></li></ul>
+        <p class="footer-disclaimer">We use cookies and may display ads to support free content. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BuildStack. All rights reserved.</p>
+      <p class="mono">Static HTML · Crafted with care.</p>
+    </div>
+  </div>
+</footer>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BuildStack</title>
+    <link>https://buildstack.dev</link>
+    <description>BuildStack is an independent publication covering web development, AI tools, and developer guides. Honest, practical writing from working engineers — no fluff, no clickbait.</description>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 27 Apr 2026 05:02:37 GMT</lastBuildDate>
+    <atom:link href="https://buildstack.dev/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to Build Authentication in Next.js: A Step-by-Step Walkthrough</title>
+      <link>https://buildstack.dev/blog/build-authentication-in-nextjs/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/build-authentication-in-nextjs/</guid>
+      <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+      <description>A practical, opinionated guide to adding email + OAuth authentication to a Next.js App Router project — covering sessions, middleware, and the real-world gotchas.</description>
+      <category>Web Development</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>The Best AI Tools for Developers in 2026 (Used Daily, Not Just Tested)</title>
+      <link>https://buildstack.dev/blog/best-ai-tools-for-developers-2026/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/best-ai-tools-for-developers-2026/</guid>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 GMT</pubDate>
+      <description>An honest look at the AI tools that have actually changed how we work in 2026 — what they&#39;re great at, where they fall apart, and how to use them without becoming dependent on them.</description>
+      <category>AI Tools</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>How to Optimize Core Web Vitals Without Breaking a Sweat</title>
+      <link>https://buildstack.dev/blog/optimize-core-web-vitals/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/optimize-core-web-vitals/</guid>
+      <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
+      <description>A practical playbook for shipping fast websites in 2026 — what each Core Web Vital actually measures, the fixes that move the needle, and the ones that quietly don&#39;t.</description>
+      <category>Performance</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>A Practical Beginner&#39;s Guide to REST APIs</title>
+      <link>https://buildstack.dev/blog/beginner-guide-to-rest-apis/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/beginner-guide-to-rest-apis/</guid>
+      <pubDate>Thu, 09 Apr 2026 00:00:00 GMT</pubDate>
+      <description>What a REST API actually is, why HTTP verbs matter, and how to design and consume one without falling into common traps. Written for developers who want a working mental model, not a textbook definition.</description>
+      <category>Developer Guides</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>How to Deploy a Full-Stack App: A No-Nonsense Walkthrough</title>
+      <link>https://buildstack.dev/blog/deploy-fullstack-app-walkthrough/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/deploy-fullstack-app-walkthrough/</guid>
+      <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
+      <description>From localhost to a live URL — a clear, modern path to deploying a Next.js + Postgres app without buying into a single vendor&#39;s worldview.</description>
+      <category>Developer Guides</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Mastering React Server Components in Next.js</title>
+      <link>https://buildstack.dev/blog/react-server-components-mastery/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/react-server-components-mastery/</guid>
+      <pubDate>Thu, 02 Apr 2026 00:00:00 GMT</pubDate>
+      <description>Server Components have changed how Next.js apps are built. Here&#39;s a working mental model — what they&#39;re for, where Client Components belong, and the patterns that scale.</description>
+      <category>Web Development</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>TypeScript Patterns That Make Your Codebase Easier to Live With</title>
+      <link>https://buildstack.dev/blog/typescript-patterns-everyday-codebases/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/typescript-patterns-everyday-codebases/</guid>
+      <pubDate>Sun, 29 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Beyond the basics — a handful of TypeScript patterns that pay rent every day, including discriminated unions, branded types, and how to stop fighting the compiler.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Tailwind CSS vs CSS-in-JS: How to Actually Choose</title>
+      <link>https://buildstack.dev/blog/tailwind-vs-css-in-js/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/tailwind-vs-css-in-js/</guid>
+      <pubDate>Wed, 25 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A grown-up comparison of Tailwind, CSS Modules, and CSS-in-JS — what each is good at, where each falls down, and which one fits your team.</description>
+      <category>Web Development</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Designing a Database Schema You Won&#39;t Regret in Six Months</title>
+      <link>https://buildstack.dev/blog/database-schema-design/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/database-schema-design/</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Schema design choices are quiet for the first month and loud for the next five years. A practical guide to the decisions that matter most early.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>GraphQL vs REST: A Practical Comparison</title>
+      <link>https://buildstack.dev/blog/graphql-vs-rest-comparison/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/graphql-vs-rest-comparison/</guid>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Beyond the hype — when GraphQL is genuinely the right choice, when REST stays the obvious answer, and what changes when you actually run them in production.</description>
+      <category>Developer Guides</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>How to Write React Components That Don&#39;t Get Refactored Twice</title>
+      <link>https://buildstack.dev/blog/clean-react-components/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/clean-react-components/</guid>
+      <pubDate>Fri, 13 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Concrete patterns for writing React components that survive contact with a real codebase — composition, prop design, and the small habits that prevent rewrites.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Debugging Modern Web Apps: A Field Guide</title>
+      <link>https://buildstack.dev/blog/debugging-modern-web-apps/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/debugging-modern-web-apps/</guid>
+      <pubDate>Mon, 09 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A real toolkit for finding bugs in 2026 — DevTools tactics, network inspection, source maps, structured logs, and the discipline that turns hours of guessing into ten minutes of looking.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>How to Use Git Confidently in a Team</title>
+      <link>https://buildstack.dev/blog/git-in-a-team/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/git-in-a-team/</guid>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Beyond add, commit, push — the Git workflows, recovery techniques, and team conventions that prevent the late-night merge disasters.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Monolith vs Microservices: When to Choose What</title>
+      <link>https://buildstack.dev/blog/monolith-vs-microservices/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/monolith-vs-microservices/</guid>
+      <pubDate>Sun, 01 Mar 2026 00:00:00 GMT</pubDate>
+      <description>An honest look at the architectural debate that won&#39;t go away — when a monolith is the right call, when microservices earn their complexity, and the modular middle ground most teams should start with.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Understanding JavaScript Promises and Async/Await</title>
+      <link>https://buildstack.dev/blog/javascript-async-await-promises/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/javascript-async-await-promises/</guid>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 GMT</pubDate>
+      <description>A clear, example-led guide to async JavaScript — what Promises are, why async/await exists, the patterns that hold up, and the mistakes that quietly cost performance.</description>
+      <category>Developer Guides</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Effective Code Reviews That Don&#39;t Drain Your Team</title>
+      <link>https://buildstack.dev/blog/effective-code-reviews/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/effective-code-reviews/</guid>
+      <pubDate>Sat, 21 Feb 2026 00:00:00 GMT</pubDate>
+      <description>How to give and receive code reviews that improve quality, raise people up, and don&#39;t turn into bottlenecks. Specific habits, anti-patterns, and the language that defuses friction.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Using AI Coding Assistants Without Losing Your Edge</title>
+      <link>https://buildstack.dev/blog/ai-coding-assistants-without-losing-edge/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/ai-coding-assistants-without-losing-edge/</guid>
+      <pubDate>Tue, 17 Feb 2026 00:00:00 GMT</pubDate>
+      <description>AI is making engineers faster — and, for some, lazier. A practical guide to using AI assistants in your workflow while staying sharp, employable, and capable of solving the hard stuff.</description>
+      <category>AI Tools</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>An Honest Guide to Picking a Frontend Framework in 2026</title>
+      <link>https://buildstack.dev/blog/picking-frontend-framework-2026/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/picking-frontend-framework-2026/</guid>
+      <pubDate>Fri, 13 Feb 2026 00:00:00 GMT</pubDate>
+      <description>React, Next.js, Svelte, Solid, Astro, and the rest — a practical comparison of where each framework fits, written for people choosing one for a real project.</description>
+      <category>Web Development</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>Building Accessible Web Apps: A Practical Guide</title>
+      <link>https://buildstack.dev/blog/accessible-web-apps-practical-guide/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/accessible-web-apps-practical-guide/</guid>
+      <pubDate>Mon, 09 Feb 2026 00:00:00 GMT</pubDate>
+      <description>Accessibility isn&#39;t checklist work — it&#39;s product quality. A working developer&#39;s guide to the WCAG basics, the tools that catch most issues, and the patterns that hold up.</description>
+      <category>Best Practices</category>
+      <author>BuildStack Editorial</author>
+    </item>
+    <item>
+      <title>How to Structure a Large React Application Without It Becoming a Maze</title>
+      <link>https://buildstack.dev/blog/structuring-large-react-applications/</link>
+      <guid isPermaLink="true">https://buildstack.dev/blog/structuring-large-react-applications/</guid>
+      <pubDate>Thu, 05 Feb 2026 00:00:00 GMT</pubDate>
+      <description>Folder structures, module boundaries, and team conventions that keep React projects navigable as they grow from one engineer to twenty.</description>
+      <category>Web Development</category>
+      <author>BuildStack Editorial</author>
+    </item>
+  </channel>
+</rss>
